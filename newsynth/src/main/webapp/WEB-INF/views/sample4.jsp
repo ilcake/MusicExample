@@ -27,26 +27,22 @@
 	<input type="button" id="play" value="PLAY" />
 	<input type="button" id="seeCode" value="seeCode" />
 	<textarea id="codes" rows="20" cols="50">
-		
-		
-	
-var bpm = 0.5;
+	var bpm = 0.25;
 var tempo=0.25;
 
 function getLoc(loc, dloc){
-   loc*=4;
+   loc*=2.8;
    dloc=loc+dloc*tempo*bpm;
    return dloc;
 }
-
 makeSound();
-setInterval(makeSound, getLoc(0, 32)*1000);
 
 function makeSound(){
+
 var sound1 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'pi/39191__jobro__piano-ff-044.wav',
+  path : 'beat/Continuum Beat 01.wav',
   loop : false
 	  }
 }, function() {
@@ -57,104 +53,87 @@ options : {
 var sound2 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'pi/39191__jobro__piano-ff-044.wav',
+  path : 'beat/Continuum Beat 01.wav',
   loop : false
 	  }
 }, function() {
-	console.log('sound2 file loaded!');
-	sound2.play(getLoc(0,4),0);
+	console.log('1 file loaded!');
+	sound2.play(getLoc(1,0),0);
 });
 
 var sound3 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'pi/39191__jobro__piano-ff-044.wav',
+  path : 'beat/Continuum Beat 01.wav',
   loop : false
 	  }
 }, function() {
-	console.log('sound3 file loaded!');
-	sound3.play(getLoc(0,6),0);
+	console.log('1 file loaded!');
+	sound3.play(getLoc(2,0),0);
 });
-
 
 var sound4 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'pi/39189__jobro__piano-ff-042.wav',
+  path : 'beat/Continuum Beat 01.wav',
   loop : false
 	  }
 }, function() {
-	console.log('sound4 file loaded!');
-	sound4.play(getLoc(0,8),0);
+	console.log('1 file loaded!');
+	sound4.play(getLoc(3,0),0);
 });
 
-var sound5 = new Pz.Sound({
+
+var gu1 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'pi/39189__jobro__piano-ff-042.wav',
+  path : 'notes/guitar_code/50F-GA1-C2MJ.wav',
   loop : false
 	  }
 }, function() {
-	console.log('sound5 file loaded!');
-	sound5.play(getLoc(0,12),0);
+	console.log('1 file loaded!');
+	gu1.play(getLoc(1,0),0);
 });
 
-var sound6 = new Pz.Sound({
+
+var gu2 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'pi/39199__jobro__piano-ff-051.wav',
+  path : 'notes/guitar_code/50F-GA1-G1MJ.wav',
   loop : false
 	  }
 }, function() {
-	console.log('sound6 file loaded!');
-	sound6.play(getLoc(0,20),0);
+	console.log('1 file loaded!');
+	gu2.play(getLoc(1,16),0);
 });
 
-var sound7 = new Pz.Sound({
+
+
+var gu3 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'pi/39199__jobro__piano-ff-051.wav',
+  path : 'notes/guitar_code/50F-GA2-A1MN.wav',
   loop : false
 	  }
 }, function() {
-	console.log('sound7 file loaded!');
-	sound7.play(getLoc(0,22),0);
+	console.log('1 file loaded!');
+	gu3.play(getLoc(2,0),0);
 });
 
-var sound8 = new Pz.Sound({
+
+var gu4 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'pi/39209__jobro__piano-ff-061.wav',
+  path : 'notes/guitar_code/50F-GA2-F1MJ.wav',
   loop : false
 	  }
 }, function() {
-	console.log('sound8 file loaded!');
-	sound8.play(getLoc(0,24),0);
+	console.log('1 file loaded!');
+	gu4.play(getLoc(2,16),0);
 });
 
-var sound9 = new Pz.Sound({
-source : 'file',
-options : {
-  path : 'pi/39199__jobro__piano-ff-051.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('sound9 file loaded!');
-	sound9.play(getLoc(0,28),0);
-});
 
-var sound10 = new Pz.Sound({
-source : 'file',
-options : {
-  path : 'pi/39211__jobro__piano-ff-063.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('sound10 file loaded!');
-	sound10.play(getLoc(0,0),0);
-});
 }
-
 
 
 
