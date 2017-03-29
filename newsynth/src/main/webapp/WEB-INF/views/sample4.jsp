@@ -8,6 +8,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.0/Pizzicato.js"></script>
 
 <script type="text/javascript">
+	var bbpm;
 	$(function() {
 		$("#play").on("click", function() {
 			var codes = $("#codes").val();
@@ -18,6 +19,26 @@
 			alert(codes);
 		});
 	});
+
+	var ctx = new AudioContext();
+
+	function loadMusic(url) {
+		var req = new XMLHttpRequest();
+		req.open('GET', url, true);
+		req.responseType = 'arraybuffer';
+
+		req.onload = function() {
+
+			ctx.decodeAudioData(req.response, function(buffer) {
+				console.log(buffer);
+				console.log(buffer.duration); // 116
+				bbpm = (buffer.duration);
+			})
+		};
+		req.send();
+	}
+
+	loadMusic('beat/Daydream Beat 01.wav');
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>play by script</title>
@@ -27,119 +48,150 @@
 	<input type="button" id="play" value="PLAY" />
 	<input type="button" id="seeCode" value="seeCode" />
 	<textarea id="codes" rows="20" cols="50">
-	var bpm = 0.25;
-var tempo=0.25;
+loadMusic('beat/Daydream Beat 01.wav');
+var bpm = bbpm-0.05;
+alert(bpm);
+var tempo=(bpm)/16;
 
 function getLoc(loc, dloc){
-   loc*=2.8;
-   dloc=loc+dloc*tempo*bpm;
-   return dloc;
+   where=loc*bpm;
+   fwhere=where+(tempo*dloc);
+   return fwhere;
 }
+
 makeSound();
 
 function makeSound(){
-
+var group1=new Pz.Group();
 var sound1 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'beat/Continuum Beat 01.wav',
+  path : 'beat/Daydream Beat 01.wav',
   loop : false
 	  }
 }, function() {
 	console.log('1 file loaded!');
+group1.addSound(sound1);
 	sound1.play(getLoc(0,0),0);
 });
 
 var sound2 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'beat/Continuum Beat 01.wav',
+  path : 'beat/Daydream Beat 01.wav',
   loop : false
 	  }
 }, function() {
 	console.log('1 file loaded!');
+group1.addSound(sound2);
 	sound2.play(getLoc(1,0),0);
 });
 
 var sound3 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'beat/Continuum Beat 01.wav',
+  path : 'beat/Daydream Beat 01.wav',
   loop : false
 	  }
 }, function() {
 	console.log('1 file loaded!');
+group1.addSound(sound3);
 	sound3.play(getLoc(2,0),0);
 });
 
 var sound4 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'beat/Continuum Beat 01.wav',
+  path : 'beat/Daydream Beat 01.wav',
   loop : false
 	  }
 }, function() {
 	console.log('1 file loaded!');
+group1.addSound(sound4);
 	sound4.play(getLoc(3,0),0);
 });
 
-
-var gu1 = new Pz.Sound({
+var sound5 = new Pz.Sound({
 source : 'file',
 options : {
-  path : 'notes/guitar_code/50F-GA1-C2MJ.wav',
+  path : 'beat/Daydream Beat 01.wav',
   loop : false
 	  }
 }, function() {
 	console.log('1 file loaded!');
-	gu1.play(getLoc(1,0),0);
+group1.addSound(sound5);
+	sound5.play(getLoc(4,0),0);
 });
 
+/////////////////////////
 
-var gu2 = new Pz.Sound({
+var bass1=new Pz.Sound({
 source : 'file',
 options : {
-  path : 'notes/guitar_code/50F-GA1-G1MJ.wav',
+  path : 'bass/Bouncy 80s Groove Bass.wav',
   loop : false
 	  }
 }, function() {
 	console.log('1 file loaded!');
-	gu2.play(getLoc(1,16),0);
+group1.addSound(bass1);
+	bass1.play(getLoc(1,0),0);
 });
 
 
-
-var gu3 = new Pz.Sound({
+var bass2=new Pz.Sound({
 source : 'file',
 options : {
-  path : 'notes/guitar_code/50F-GA2-A1MN.wav',
+  path : 'bass/Bouncy 80s Groove Bass.wav',
   loop : false
 	  }
 }, function() {
 	console.log('1 file loaded!');
-	gu3.play(getLoc(2,0),0);
+group1.addSound(bass2);
+	bass2.play(getLoc(2,0),0);
 });
 
 
-var gu4 = new Pz.Sound({
+var bass3=new Pz.Sound({
 source : 'file',
 options : {
-  path : 'notes/guitar_code/50F-GA2-F1MJ.wav',
+  path : 'bass/Bouncy 80s Groove Bass.wav',
   loop : false
 	  }
 }, function() {
 	console.log('1 file loaded!');
-	gu4.play(getLoc(2,16),0);
+group1.addSound(bass3);
+	bass3.play(getLoc(3,0),0);
 });
 
+
+
+var bass4=new Pz.Sound({
+source : 'file',
+options : {
+  path : 'bass/Bouncy 80s Groove Bass.wav',
+  loop : false
+	  }
+}, function() {
+	console.log('1 file loaded!');
+group1.addSound(bass4);
+	bass4.play(getLoc(4,0),0);
+});
+
+
+
+var bass5=new Pz.Sound({
+source : 'file',
+options : {
+  path : 'bass/Bouncy 80s Groove Bass.wav',
+  loop : false
+	  }
+}, function() {
+	console.log('1 file loaded!');
+group1.addSound(bass5);
+	bass5.play(getLoc(5,0),0);
+});
 
 }
-
-
-
-
-
-
 </textarea>
 </body>
 </html>
