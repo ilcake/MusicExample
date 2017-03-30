@@ -9,14 +9,24 @@
 
 <script type="text/javascript">
 	var bbpm;
+	var bpm;
+	var tempo;
+	var group1 = new Pz.Group();
+
+	loadMusic('beat/80s Back Beat 01.wav');
+
 	$(function() {
 		$("#play").on("click", function() {
+			group1.stop();
 			var codes = $("#codes").val();
 			eval(codes);
 		});
 		$("#seeCode").on("click", function() {
 			var codes = $("#codes").val();
 			alert(codes);
+		});
+		$("#stop").on("click", function() {
+			group1.stop();
 		});
 	});
 
@@ -33,12 +43,42 @@
 				console.log(buffer);
 				console.log(buffer.duration); // 116
 				bbpm = (buffer.duration);
+
+				bpm = bbpm - 0.05;
+				tempo = (bpm) / 32;
 			})
 		};
 		req.send();
 	}
 
-	loadMusic('beat/Daydream Beat 01.wav');
+
+	function getLoc(loc, dloc) {
+		var where = loc * bpm + bpm;
+		var fwhere = where + (tempo * dloc);
+		return fwhere;
+	}
+
+
+	function mkSound(filename, where) {
+		var sound1 = new Pz.Sound({
+			source : 'file',
+			options : {
+				path : filename,
+				loop : false
+			}
+		}, function() {
+			console.log(filename + ' file loaded!' + where);
+			group1.addSound(sound1);
+			sound1.play(where, 0);
+		});
+	}
+
+	function mkLoop(files, loc, times) {
+		for (var i = 0; i < times; i++) {
+			mkSound(files, loc + (i * bpm));
+		}
+
+	}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>play by script</title>
@@ -47,151 +87,49 @@
 	<textarea id="codes" rows="20" cols="50"></textarea>
 	<input type="button" id="play" value="PLAY" />
 	<input type="button" id="seeCode" value="seeCode" />
+	<input type="button" id="stop" value="STOP" />
 	<textarea id="codes" rows="20" cols="50">
-loadMusic('beat/Daydream Beat 01.wav');
-var bpm = bbpm-0.05;
-alert(bpm);
-var tempo=(bpm)/16;
+function makeSound(){
 
-function getLoc(loc, dloc){
-   where=loc*bpm;
-   fwhere=where+(tempo*dloc);
-   return fwhere;
+
+/////////////////////////beats
+var beats='beat/80s Back Beat 01.wav';
+mkLoop(beats, getLoc(0,0), 9);
+
+//////////////////////////guitar
+var gui1 = 'notes/guitar_code/50E-GA2-C2MJ.wav';
+var gui2 = 'notes/guitar_code/50E-GA2-G1MJ.wav';
+var gui3 = 'notes/guitar_code/50E-GA3-A1MN.wav';
+var gui4 = 'notes/guitar_code/50E-GA2-F1MJ.wav';
+
+mkLoop(gui1, getLoc(1,-1), 1);
+mkLoop(gui2, getLoc(1,15), 1);
+mkLoop(gui3, getLoc(2,-1), 1);
+mkLoop(gui4, getLoc(2,15), 1);
+
+mkLoop(gui1, getLoc(3,-1), 1);
+mkLoop(gui2, getLoc(3,15), 1);
+mkLoop(gui3, getLoc(4,-1), 1);
+mkLoop(gui4, getLoc(4,15), 1);
+
+////////////////////////melody
+
+var mel2='melody/Dreamers Guitar.wav';
+mkLoop(mel2, getLoc(1,-1), 1);
+mkLoop(mel2, getLoc(3,-1), 1);
+
+
 }
 
 makeSound();
 
-function makeSound(){
-var group1=new Pz.Group();
-var sound1 = new Pz.Sound({
-source : 'file',
-options : {
-  path : 'beat/Daydream Beat 01.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(sound1);
-	sound1.play(getLoc(0,0),0);
-});
-
-var sound2 = new Pz.Sound({
-source : 'file',
-options : {
-  path : 'beat/Daydream Beat 01.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(sound2);
-	sound2.play(getLoc(1,0),0);
-});
-
-var sound3 = new Pz.Sound({
-source : 'file',
-options : {
-  path : 'beat/Daydream Beat 01.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(sound3);
-	sound3.play(getLoc(2,0),0);
-});
-
-var sound4 = new Pz.Sound({
-source : 'file',
-options : {
-  path : 'beat/Daydream Beat 01.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(sound4);
-	sound4.play(getLoc(3,0),0);
-});
-
-var sound5 = new Pz.Sound({
-source : 'file',
-options : {
-  path : 'beat/Daydream Beat 01.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(sound5);
-	sound5.play(getLoc(4,0),0);
-});
-
-/////////////////////////
-
-var bass1=new Pz.Sound({
-source : 'file',
-options : {
-  path : 'bass/Bouncy 80s Groove Bass.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(bass1);
-	bass1.play(getLoc(1,0),0);
-});
-
-
-var bass2=new Pz.Sound({
-source : 'file',
-options : {
-  path : 'bass/Bouncy 80s Groove Bass.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(bass2);
-	bass2.play(getLoc(2,0),0);
-});
-
-
-var bass3=new Pz.Sound({
-source : 'file',
-options : {
-  path : 'bass/Bouncy 80s Groove Bass.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(bass3);
-	bass3.play(getLoc(3,0),0);
-});
 
 
 
-var bass4=new Pz.Sound({
-source : 'file',
-options : {
-  path : 'bass/Bouncy 80s Groove Bass.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(bass4);
-	bass4.play(getLoc(4,0),0);
-});
 
 
 
-var bass5=new Pz.Sound({
-source : 'file',
-options : {
-  path : 'bass/Bouncy 80s Groove Bass.wav',
-  loop : false
-	  }
-}, function() {
-	console.log('1 file loaded!');
-group1.addSound(bass5);
-	bass5.play(getLoc(5,0),0);
-});
 
-}
 </textarea>
 </body>
 </html>
