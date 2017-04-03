@@ -17,6 +17,7 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources mapping="/img/**" location="/img/" />
 	<resources mapping="/js/**" location="/js/" />
+	<resources mapping="/script/**" location="/script/" />
 	<resources mapping="/sounds/**" location="/sounds/" />
 	<resources mapping="/webcomponents/**" location="/webcomponents/" />
 	<resources mapping="/styles/**" location="/styles/" />

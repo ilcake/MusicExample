@@ -10,7 +10,9 @@
 	<P>
 		<a href="index">index</a> <a href="sample">sample</a> <a
 			href="sample2">sample2</a><a href="sample3">sample3</a><a
-			href="sample4">sample4</a>
+			href="sample4">sample4</a><a
+			href="sample5">sample5</a><a
+			href="sample6">sample6</a>
 	</P>
 </body>
 </html>

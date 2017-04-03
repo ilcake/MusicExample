@@ -102,30 +102,26 @@ var gui2 = 'notes/guitar_code/50E-GA2-G1MJ.wav';
 var gui3 = 'notes/guitar_code/50E-GA3-A1MN.wav';
 var gui4 = 'notes/guitar_code/50E-GA2-F1MJ.wav';
 
-mkLoop(gui1, getLoc(1,-1), 1);
-mkLoop(gui2, getLoc(1,15), 1);
-mkLoop(gui3, getLoc(2,-1), 1);
-mkLoop(gui4, getLoc(2,15), 1);
+mkLoop(gui1, getLoc(1,0), 1);
+mkLoop(gui2, getLoc(1,16), 1);
+mkLoop(gui3, getLoc(2,0), 1);
+mkLoop(gui4, getLoc(2,16), 1);
 
-mkLoop(gui1, getLoc(3,-1), 1);
-mkLoop(gui2, getLoc(3,15), 1);
-mkLoop(gui3, getLoc(4,-1), 1);
-mkLoop(gui4, getLoc(4,15), 1);
+mkLoop(gui1, getLoc(3,0), 1);
+mkLoop(gui2, getLoc(3,16), 1);
+mkLoop(gui3, getLoc(4,0), 1);
+mkLoop(gui4, getLoc(4,16), 1);
 
 ////////////////////////melody
 
 var mel2='melody/Dreamers Guitar.wav';
-mkLoop(mel2, getLoc(1,-1), 1);
-mkLoop(mel2, getLoc(3,-1), 1);
+mkLoop(mel2, getLoc(1,0), 1);
+mkLoop(mel2, getLoc(3,0), 1);
 
 
 }
 
 makeSound();
-
-
-
-
 
 
 
