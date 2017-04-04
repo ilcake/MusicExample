@@ -72,4 +72,11 @@ public class HomeController {
 		return "sample6";
 	}
 
+
+	@RequestMapping(value = "/sample7", method = RequestMethod.GET)
+	public String sample7() {
+
+		return "sample7";
+	}
+
 }

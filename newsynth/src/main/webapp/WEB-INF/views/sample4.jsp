@@ -118,7 +118,6 @@ var mel2='melody/Dreamers Guitar.wav';
 mkLoop(mel2, getLoc(1,0), 1);
 mkLoop(mel2, getLoc(3,0), 1);
 
-
 }
 
 makeSound();
