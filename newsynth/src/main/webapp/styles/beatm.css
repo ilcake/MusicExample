@@ -35,16 +35,21 @@ body {
 	background-color: rgb(255, 255, 255);
 	margin: 0px auto;
 	padding: 20px 20px 15px 20px;
-  -webkit-box-shadow:0px 2px 3px rgba(0, 0, 0, 0.2);
-  display: none;
+	-webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+	display: none;
 }
 
-#io { display:block; padding:5px 20px;}
+#io {
+	display: block;
+	padding: 5px 20px;
+}
+
 .container.active {
 	display: block;
 }
 
 .buttons_row {
+	
 }
 
 #LED_row {
@@ -97,8 +102,8 @@ body {
 .combo {
 	width: 158px;
 	height: 15px;
-	background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), 
-		color-stop(2%, rgb(255, 255, 255)), color-stop(5%, rgb(244, 244, 244)), 
+	background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)),
+		color-stop(2%, rgb(255, 255, 255)), color-stop(5%, rgb(244, 244, 244)),
 		color-stop(90%, rgb(255, 255, 255)), to(rgb(232, 232, 232)));
 	border-radius: 3px;
 	border: 1px solid rgb(220, 220, 220);
@@ -196,7 +201,7 @@ body {
 	vertical-align: top;
 	padding: 10px 20px;
 	text-align: right;
-	color: rgb(76, 76 ,76);
+	color: rgb(76, 76, 76);
 }
 
 #tempo {
@@ -279,9 +284,9 @@ body {
 }
 
 #loadingcard {
-	background: -webkit-gradient(linear, left top, left bottom, from(rgb(235, 235, 235)), 
-	 to(rgb(255, 255, 255)));
-  -webkit-box-shadow:0px 2px 3px rgba(0, 0, 0, 0.2);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgb(235, 235, 235)),
+		to(rgb(255, 255, 255)));
+	-webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
 	width: 260px;
 	height: 60px;
 	border-radius: 10px;
@@ -299,5 +304,10 @@ body {
 	display: block;
 }
 
-img.preload { display: none; }
-#MIDIPlugin { visibility: hidden; }
+img.preload {
+	display: none;
+}
+
+#MIDIPlugin {
+	visibility: hidden;
+}

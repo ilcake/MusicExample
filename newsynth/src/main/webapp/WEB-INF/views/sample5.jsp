@@ -3,16 +3,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<script src="script/ATUtil.js"></script>
-	<script src="script/three.min.js"></script>
-	<script src="script/RequestAnimationFrame.js"></script>
-	<script src="script/Stats.js"></script>
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script src="script/jquery.mousewheel.js"></script>
-	<script src="script/ImprovedNoise.js"></script>
-	<script src="script/Visualizer.js"></script>
-	<script src="script/main.js"></script>
+<script src="script/ATUtil.js"></script>
+<script src="script/three.min.js"></script>
+<script src="script/RequestAnimationFrame.js"></script>
+<script src="script/Stats.js"></script>
+<script src="resources/jquery-3.1.1.min.js"></script>
+<script src="script/jquery.mousewheel.js"></script>
+<script src="script/ImprovedNoise.js"></script>
+<script src="script/Visualizer.js"></script>
+<script src="script/main.js"></script>
 <script type="text/javascript" src="resources/jquery-3.1.1.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.0/Pizzicato.js"></script>
@@ -40,7 +39,7 @@
 				source = audioCtx.createBufferSource(); // creates a sound source
 				source.buffer = buffer;
 				source.connect(analyser);
-				source.start(time+2);
+				source.start(time + 2);
 			})
 		};
 		req.send();
