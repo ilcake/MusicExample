@@ -19,10 +19,10 @@
 	};
 	var muArray = {
 		"beat" : "",
-		"notes" : ""
+		"notes" : []
 	};
-	
-	
+
+
 
 
 	var ctx = new AudioContext();
@@ -88,14 +88,24 @@
 			var status = $(this).attr("src");
 			if (status == "images/button_off.png") {
 				theOne.attr("src", "images/button_on.png");
-
+				muArray.notes.push({
+					"note" : theOne.attr("dt-nt"),
+					"location" : theOne.attr("dt-loc")
+				});
 				return
 			} else {
 				theOne.attr("src", "images/button_off.png");
 			}
 		});
 
-		$("#play").on("click", function() {});
+		$("#play").on("click", function() {
+			var beat = muArray.beat;
+			var notes = muArray.notes;
+			alert(beat);
+			$.each(notes, function(index, item) {
+				alert(item.note + "//" + item.location);
+			});
+		});
 	});
 
 	function mkPlay() {
@@ -130,23 +140,25 @@
 			<br />
 		</div>
 		<div class="buttons_row">
-			<span class="label">Tom 2</span> <img id="Tom2_1" class="btn"
-				src="images/button_off.png"><img id="Tom2_2" class="btn"
-				src="images/button_off.png"><img id="Tom2_3" class="btn"
-				src="images/button_off.png"><img id="Tom2_4" class="btn"
-				src="images/button_off.png"><img id="Tom2_5" class="btn"
-				src="images/button_off.png"><img id="Tom2_6" class="btn"
-				src="images/button_off.png"><img id="Tom2_7" class="btn"
-				src="images/button_off.png"><img id="Tom2_8" class="btn"
-				src="images/button_off.png"><img id="Tom2_9" class="btn"
-				src="images/button_off.png"><img id="Tom2_10" class="btn"
-				src="images/button_off.png"><img id="Tom2_11" class="btn"
-				src="images/button_off.png"><img id="Tom2_12" class="btn"
-				src="images/button_off.png"><img id="Tom2_13" class="btn"
-				src="images/button_off.png"><img id="Tom2_14" class="btn"
-				src="images/button_off.png"><img id="Tom2_15" class="btn"
-				src="images/button_off.png"><img id="Tom2_16" class="btn"
-				src="images/button_off.png">
+			<span class="label">Tom 2</span> <img dt-nt="1.wav" dt-loc="1"
+				id="Tom2_1" class="btn" src="images/button_off.png"><img
+				dt-nt="2.wav" dt-loc="2" id="Tom2_2" class="btn"
+				src="images/button_off.png"><img dt-nt="3.wav" dt-loc="3"
+				id="Tom2_3" class="btn" src="images/button_off.png"><img
+				dt-nt="4.wav" dt-loc="4" id="Tom2_4" class="btn"
+				src="images/button_off.png"><img dt-nt="5.wav" dt-loc="5"
+				id="Tom2_5" class="btn" src="images/button_off.png"><img
+				id="Tom2_6" class="btn" src="images/button_off.png"><img
+				id="Tom2_7" class="btn" src="images/button_off.png"><img
+				id="Tom2_8" class="btn" src="images/button_off.png"><img
+				id="Tom2_9" class="btn" src="images/button_off.png"><img
+				id="Tom2_10" class="btn" src="images/button_off.png"><img
+				id="Tom2_11" class="btn" src="images/button_off.png"><img
+				id="Tom2_12" class="btn" src="images/button_off.png"><img
+				id="Tom2_13" class="btn" src="images/button_off.png"><img
+				id="Tom2_14" class="btn" src="images/button_off.png"><img
+				id="Tom2_15" class="btn" src="images/button_off.png"><img
+				id="Tom2_16" class="btn" src="images/button_off.png">
 		</div>
 		<div class="buttons_row">
 			<span class="label">Tom 3</span> <img id="Tom3_1" class="btn"
