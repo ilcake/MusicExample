@@ -8,6 +8,22 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.0/Pizzicato.js"></script>
 <script src="resources/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
+	var bpm;
+	var tempo;
+
+	var beat;
+	var notes = [];
+	var note = {
+		"note" : "",
+		"location" : 0
+	};
+	var muArray = {
+		"beat" : "",
+		"notes" : ""
+	};
+	
+	
+
 
 	var ctx = new AudioContext();
 
@@ -19,10 +35,9 @@
 		req.onload = function() {
 
 			ctx.decodeAudioData(req.response, function(buffer) {
-				console.log(buffer);
 				console.log(url);
 				console.log(buffer.duration); // 116
-				bbpm = (buffer.duration);
+				var bbpm = (buffer.duration);
 
 				bpm = bbpm - 0.05;
 				tempo = (bpm) / 16;
@@ -48,13 +63,11 @@
 			}
 		}, function() {
 			console.log(filename + ' file loaded!' + where);
-			group1.addSound(sound1);
 			sound1.play(where, 0);
 		});
 	}
 </script>
 <script type="text/javascript">
-	var theCoMu;
 
 	$(function() {
 		$(".btnB").on("click", function() {
@@ -65,6 +78,8 @@
 			var btUrl = ("beat/" + oneId.substr(4, oneId.length) + ".wav");
 			loadMusic(btUrl);
 			theOne.attr("src", "images/button_on.png");
+			muArray.beat = btUrl;
+			mkSound(btUrl, 0);
 		});
 
 		$(".btn").on("click", function() {
@@ -81,8 +96,11 @@
 		});
 
 		$("#play").on("click", function() {});
-
 	});
+
+	function mkPlay() {
+		setInterval(function() {}, 1000)
+	}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
@@ -236,5 +254,6 @@
 			src="images/btn_load.png"> <img id="reset"
 			src="images/btn_reset.png">
 	</div>
+
 </body>
 </html>
