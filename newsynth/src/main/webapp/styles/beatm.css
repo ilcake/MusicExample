@@ -68,7 +68,7 @@ body {
 }
 
 #pad {
-	height: 268px;
+	height: 330px;
 }
 
 #params {
@@ -76,7 +76,7 @@ body {
 }
 
 #tools {
-	height: 36px;
+	height: 190px;
 }
 
 #paramsleft_container {
@@ -310,4 +310,14 @@ img.preload {
 
 #MIDIPlugin {
 	visibility: hidden;
+}
+
+textarea#styled {
+	width: 685px;
+	height: 120px;
+	border: 3px solid #cccccc;
+	padding: 5px;
+	font-family: Tahoma, sans-serif;
+	background-position: bottom right;
+	background-repeat: no-repeat;
 }

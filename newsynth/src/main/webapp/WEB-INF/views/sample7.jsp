@@ -75,11 +75,13 @@
 			var oneId = theOne.attr("id");
 
 			$(".btnB").attr("src", "images/button_off.png");
-			var btUrl = ("beat/" + oneId.substr(4, oneId.length) + ".wav");
-			loadMusic(btUrl);
+			var purr = ("beat/" + oneId.substr(4, oneId.length) + ".wav");
+			var btUrl = ("beat " + oneId.substr(4, oneId.length));
+			loadMusic(purr);
 			theOne.attr("src", "images/button_on.png");
 			muArray.beat = btUrl;
-			mkSound(btUrl, 0);
+
+			mkCode();
 		});
 
 		$(".btn").on("click", function() {
@@ -92,24 +94,44 @@
 					"note" : theOne.attr("dt-nt"),
 					"location" : theOne.attr("dt-loc")
 				});
-				return
 			} else {
 				theOne.attr("src", "images/button_off.png");
+				var nnt = theOne.attr("dt-nt");
+				var nlc = theOne.attr("dt-loc");
+				$.each(muArray.notes, function(index, item) {
+					if (item.note == nnt && item.location == nlc) {
+						muArray.notes.splice(index, 1);
+					}
+				});
 			}
+			mkCode();
 		});
 
 		$("#play").on("click", function() {
-			var beat = muArray.beat;
-			var notes = muArray.notes;
-			alert(beat);
-			$.each(notes, function(index, item) {
-				alert(item.note + "//" + item.location);
-			});
+			mkCode();
+			goLed();
 		});
 	});
 
-	function mkPlay() {
-		setInterval(function() {}, 1000)
+	function mkCode() {
+		var beat = muArray.beat;
+		var notes = muArray.notes;
+		var theCode = "";
+		theCode += beat + "{\n loop 1 \n}"
+		theCode += "\n";
+		if (muArray.notes.length != 0) {
+			theCode += "\nins PI01{\n";
+			theCode += "location 1;\n";
+			$.each(notes, function(index, item) {
+				theCode += "note(" + item.note + "," + item.location + ");\n";
+			});
+			theCode += "}";
+		}
+		$("#styled").text(theCode);
+	}
+
+	function goLed() {
+		var theleds = $(".leds").attr("src", "images/LED_on.png");
 	}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -140,13 +162,13 @@
 			<br />
 		</div>
 		<div class="buttons_row">
-			<span class="label">Tom 2</span> <img dt-nt="1.wav" dt-loc="1"
+			<span class="label">Tom 2</span> <img dt-nt="a" dt-loc="1"
 				id="Tom2_1" class="btn" src="images/button_off.png"><img
-				dt-nt="2.wav" dt-loc="2" id="Tom2_2" class="btn"
-				src="images/button_off.png"><img dt-nt="3.wav" dt-loc="3"
+				dt-nt="b" dt-loc="2" id="Tom2_2" class="btn"
+				src="images/button_off.png"><img dt-nt="c" dt-loc="3"
 				id="Tom2_3" class="btn" src="images/button_off.png"><img
-				dt-nt="4.wav" dt-loc="4" id="Tom2_4" class="btn"
-				src="images/button_off.png"><img dt-nt="5.wav" dt-loc="5"
+				dt-nt="d" dt-loc="4" id="Tom2_4" class="btn"
+				src="images/button_off.png"><img dt-nt="5" dt-loc="5"
 				id="Tom2_5" class="btn" src="images/button_off.png"><img
 				id="Tom2_6" class="btn" src="images/button_off.png"><img
 				id="Tom2_7" class="btn" src="images/button_off.png"><img
@@ -236,22 +258,42 @@
 				src="images/button_off.png"><img id="Kick_16" class="btn"
 				src="images/button_off.png">
 		</div>
+		<div class="buttons_row">
+			<span class="label">Kick</span> <img id="Kick_a1" class="btn"
+				src="images/button_off.png"><img id="Kick_a2" class="btn"
+				src="images/button_off.png"><img id="Kick_a3" class="btn"
+				src="images/button_off.png"><img id="Kick_a4" class="btn"
+				src="images/button_off.png"><img id="Kick_a5" class="btn"
+				src="images/button_off.png"><img id="Kick_a6" class="btn"
+				src="images/button_off.png"><img id="Kick_a7" class="btn"
+				src="images/button_off.png"><img id="Kick_a8" class="btn"
+				src="images/button_off.png"><img id="Kick_a9" class="btn"
+				src="images/button_off.png"><img id="Kick_a10" class="btn"
+				src="images/button_off.png"><img id="Kick_a11" class="btn"
+				src="images/button_off.png"><img id="Kick_a12" class="btn"
+				src="images/button_off.png"><img id="Kick_a13" class="btn"
+				src="images/button_off.png"><img id="Kick_a14" class="btn"
+				src="images/button_off.png"><img id="Kick_a15" class="btn"
+				src="images/button_off.png"><img id="Kick_a16" class="btn"
+				src="images/button_off.png">
+		</div>
 		<div class="buttons_row" id="LED_row">
-			<span class="label"></span> <img id="LED_1" src="images/LED_off.png"><img
-				id="LED_2" src="images/LED_off.png"><img id="LED_3"
-				src="images/LED_off.png"><img id="LED_4"
-				src="images/LED_off.png"><img id="LED_5"
-				src="images/LED_off.png"><img id="LED_6"
-				src="images/LED_off.png"><img id="LED_7"
-				src="images/LED_off.png"><img id="LED_8"
-				src="images/LED_off.png"><img id="LED_9"
-				src="images/LED_off.png"><img id="LED_10"
-				src="images/LED_off.png"><img id="LED_11"
-				src="images/LED_off.png"><img id="LED_12"
-				src="images/LED_off.png"><img id="LED_13"
-				src="images/LED_off.png"><img id="LED_14"
-				src="images/LED_off.png"><img id="LED_15"
-				src="images/LED_off.png"><img id="LED_16"
+			<span class="label"></span> <img class="leds" id="LED_1"
+				src="images/LED_off.png"><img class="leds" id="LED_2"
+				src="images/LED_off.png"><img id="LED_3" class="leds"
+				src="images/LED_off.png"><img id="LED_4" class="leds"
+				src="images/LED_off.png"><img id="LED_5" class="leds"
+				src="images/LED_off.png"><img id="LED_6" class="leds"
+				src="images/LED_off.png"><img id="LED_7" class="leds"
+				src="images/LED_off.png"><img id="LED_8" class="leds"
+				src="images/LED_off.png"><img id="LED_9" class="leds"
+				src="images/LED_off.png"><img id="LED_10" class="leds"
+				src="images/LED_off.png"><img id="LED_11" class="leds"
+				src="images/LED_off.png"><img id="LED_12" class="leds"
+				src="images/LED_off.png"><img id="LED_13" class="leds"
+				src="images/LED_off.png"><img id="LED_14" class="leds"
+				src="images/LED_off.png"><img id="LED_15" class="leds"
+				src="images/LED_off.png"><img id="LED_16" class="leds"
 				src="images/LED_off.png">
 		</div>
 		<div>
@@ -265,6 +307,10 @@
 			id="save" src="images/btn_save.png"> <img id="load"
 			src="images/btn_load.png"> <img id="reset"
 			src="images/btn_reset.png">
+		<hr />
+		<div>
+			<textarea id="styled"></textarea>
+		</div>
 	</div>
 
 </body>
