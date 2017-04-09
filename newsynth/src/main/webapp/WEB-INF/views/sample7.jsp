@@ -110,6 +110,7 @@
 		$("#play").on("click", function() {
 			mkCode();
 			goLed();
+			setInterval(goLed, bpm * 1000);
 		});
 	});
 
@@ -131,7 +132,36 @@
 	}
 
 	function goLed() {
-		var theleds = $(".leds").attr("src", "images/LED_on.png");
+		onLeds();
+		offLeds();
+	}
+
+	function onLeds() {
+		console.log("onLeds start");
+		for (var i = 1; i < 17; i++) {
+			var thisMan = ("#LED_" + i);
+			var theTime = (tempo * i * 1000);
+			mkOnLed(thisMan, theTime);
+		}
+	}
+
+	function mkOnLed(who, time) {
+		setTimeout(function() {
+			$(who).attr("src", "images/LED_on.png");
+		}, time);
+	}
+	function mkOffLed(who, time) {
+		setTimeout(function() {
+			$(who).attr("src", "images/LED_off.png");
+		}, time);
+	}
+
+	function offLeds() {
+		for (var i = 1; i < 17; i++) {
+			var thisMan = ("#LED_" + i);
+			var theTime = (tempo * i * 1000) + 180;
+			mkOffLed(thisMan, theTime);
+		}
 	}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
