@@ -107,10 +107,23 @@
 			mkCode();
 		});
 
+		var inter;
 		$("#play").on("click", function() {
+			$(this).addClass("playing");
+			$("#stop").addClass("playing");
 			mkCode();
-			goLed();
-			setInterval(goLed, bpm * 1000);
+			if (muArray.beat != "") {
+				goLed();
+				goPlay();
+				inter = setInterval(goLed, bpm * 1000);
+			}
+		});
+
+		$("#stop").on("click", function() {
+			clearInterval(inter);
+			initLeds();
+			$(this).removeClass("playing");
+			$("#play").removeClass("playing");
 		});
 	});
 
@@ -159,9 +172,18 @@
 	function offLeds() {
 		for (var i = 1; i < 17; i++) {
 			var thisMan = ("#LED_" + i);
-			var theTime = (tempo * i * 1000) + 180;
+			var theTime = (tempo * i * 1000) + 120;
 			mkOffLed(thisMan, theTime);
 		}
+	}
+
+	function initLeds() {
+		$(".leds").attr("src", "images/LED_off.png");
+	}
+
+	function goPlay() {
+		var beat = muArray.beat;
+		var notes = muArray.notes;
 	}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
