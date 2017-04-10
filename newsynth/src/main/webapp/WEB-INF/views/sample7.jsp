@@ -8,12 +8,20 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.0/Pizzicato.js"></script>
 <script src="resources/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
+
+	var noteEx = {
+		"ins" : "R8",
+		"note" : "snare",
+		"location" : 2
+	};
+
 	var bpm;
 	var tempo;
-
 	var beat;
-	var notes = [];
+	var usedIns = [];
+
 	var note = {
+		"ins" : "",
 		"note" : "",
 		"location" : 0
 	};
@@ -22,7 +30,60 @@
 		"notes" : []
 	};
 
+	var drumSet = [ "hihat", "kick", "snare", "tom1", "tom2", "tom3" ];
 
+	Map = function() {
+		this.map = new Object();
+	};
+	Map.prototype = {
+		put : function(key, value) {
+			this.map[key] = value;
+		},
+		get : function(key) {
+			return this.map[key];
+		},
+		containsKey : function(key) {
+			return key in this.map;
+		},
+		containsValue : function(value) {
+			for (var prop in this.map) {
+				if (this.map[prop] == value) return true;
+			}
+			return false;
+		},
+		isEmpty : function(key) {
+			return (this.size() == 0);
+		},
+		clear : function() {
+			for (var prop in this.map) {
+				delete this.map[prop];
+			}
+		},
+		remove : function(key) {
+			delete this.map[key];
+		},
+		keys : function() {
+			var keys = new Array();
+			for (var prop in this.map) {
+				keys.push(prop);
+			}
+			return keys;
+		},
+		values : function() {
+			var values = new Array();
+			for (var prop in this.map) {
+				values.push(this.map[prop]);
+			}
+			return values;
+		},
+		size : function() {
+			var count = 0;
+			for (var prop in this.map) {
+				count++;
+			}
+			return count;
+		}
+	};
 
 
 	var ctx = new AudioContext();
@@ -69,45 +130,59 @@
 </script>
 <script type="text/javascript">
 
+	function btnBEvent() {
+		var theOne = $(this);
+		var oneId = theOne.attr("id");
+
+		$(".btnB").attr("src", "images/button_off.png");
+		var purr = ("beat/" + oneId.substr(4, oneId.length) + ".wav");
+		var btUrl = (oneId.substr(4, oneId.length));
+		loadMusic(purr);
+		theOne.attr("src", "images/button_on.png");
+		muArray.beat = btUrl;
+
+		mkCode();
+
+	}
+
+	function btnEvent() {
+		var theOne = $(this);
+
+		var status = $(this).attr("src");
+		if (status == "images/button_off.png") {
+			theOne.attr("src", "images/button_on.png");
+			muArray.notes.push({
+				"ins" : theOne.attr("dt-ins"),
+				"note" : theOne.attr("dt-nt"),
+				"location" : theOne.attr("dt-loc")
+			});
+			usedIns.push(theOne.attr("dt-ins"));
+
+		/* muArray.notes.push({
+			"note" : theOne.attr("dt-nt"),
+			"location" : theOne.attr("dt-loc")
+		}); */
+		} else {
+			theOne.attr("src", "images/button_off.png");
+			var nin = theOne.attr("dt-ins");
+			var nnt = theOne.attr("dt-nt");
+			var nlc = theOne.attr("dt-loc");
+			$.each(muArray.notes, function(index, item) {
+				if (item.note == nnt && item.location == nlc && item.ins == nin) {
+					muArray.notes.splice(index, 1);
+
+				}
+			});
+		}
+		mkCode();
+	}
+
 	$(function() {
 		$("#play").attr("src", "images/btn_play.png");
 
-		$(".btnB").on("click", function() {
-			var theOne = $(this);
-			var oneId = theOne.attr("id");
+		$(".btnB").on("click", btnBEvent);
 
-			$(".btnB").attr("src", "images/button_off.png");
-			var purr = ("beat/" + oneId.substr(4, oneId.length) + ".wav");
-			var btUrl = (oneId.substr(4, oneId.length));
-			loadMusic(purr);
-			theOne.attr("src", "images/button_on.png");
-			muArray.beat = btUrl;
-
-			mkCode();
-		});
-
-		$(".btn").on("click", function() {
-			var theOne = $(this);
-
-			var status = $(this).attr("src");
-			if (status == "images/button_off.png") {
-				theOne.attr("src", "images/button_on.png");
-				muArray.notes.push({
-					"note" : theOne.attr("dt-nt"),
-					"location" : theOne.attr("dt-loc")
-				});
-			} else {
-				theOne.attr("src", "images/button_off.png");
-				var nnt = theOne.attr("dt-nt");
-				var nlc = theOne.attr("dt-loc");
-				$.each(muArray.notes, function(index, item) {
-					if (item.note == nnt && item.location == nlc) {
-						muArray.notes.splice(index, 1);
-					}
-				});
-			}
-			mkCode();
-		});
+		$(".btn").on("click", btnEvent);
 
 		var interPlay;
 		var interLed;
@@ -131,22 +206,56 @@
 			$(this).removeClass("playing");
 			$("#play").removeClass("playing");
 		});
+
+		$("#beatSelection").on("change", function() {
+			var selected = $(this).val();
+			var theContents = "";
+			var basicPadSize = 330;
+
+			switch (selected) {
+			case "Loops":
+				theContents += "<div class='buttons_row'>";
+				theContents += "<span class='label'>" + selected + "</span> ";
+				for (var i = 1; i < 17; i++) {
+					theContents += "<img dt-nt='beat" + i + "' id='beat" + i + "' class='btnB' src='images/button_off.png'>";
+				}
+				theContents += "</div>";
+				break;
+			case "R8":
+			case "Acu":
+				$.each(drumSet, function(index, item) {
+					theContents += "<div class='buttons_row'>";
+					theContents += "<span class='label'>" + item + "</span> ";
+					for (var i = 1; i < 17; i++) {
+						theContents += "<img dt-ins='" + selected + "' dt-nt='" + item + "' dt-loc='" + i + "' id='" + item + "_" + i + "' class='btn' src='images/button_off.png'>";
+					}
+					theContents += "</div>"
+					basicPadSize = basicPadSize + 41.33;
+				});
+				break;
+			}
+			$("#beatSection").html(theContents);
+			$("#pad").css("height", basicPadSize + "px");
+			$(".btnB").on("click", btnBEvent);
+			$(".btn").on("click", btnEvent);
+
+		});
 	});
 
 	function mkCode() {
 		var beat = muArray.beat;
-		var notes = muArray.notes;
+		var ins = muArray.ins;
 		var theCode = "";
 		theCode += "beat " + beat + "{\n loop 1 \n}"
 		theCode += "\n";
-		if (muArray.notes.length != 0) {
-			theCode += "\nins PI01{\n";
+		$.each(muArray.notes, function(num, who) {
+			theCode += "\nins" + who.ins + "{\n";
 			theCode += "location 1;\n";
-			$.each(notes, function(index, item) {
-				theCode += "note(" + item.note + "," + item.location + ");\n";
-			});
+			theCode += "note(" + who.note + "," + who.location + ");\n";
 			theCode += "}";
-		}
+		});
+
+
 		$("#styled").text(theCode);
 	}
 
@@ -209,8 +318,14 @@
 	<img class="preload" src='images/LED_on.png'>
 
 	<div class="container active" id="pad">
-		<div class="buttons_row">
-			<span class="label">Beat</span> <img id="beat1" class="btnB"
+		<div class="selectLine">
+			<select id="beatSelection"><option value="Loops">MadeSet</option>
+				<option value="Acu">Acustic</option>
+				<option value="R8">R8</option></select>
+		</div>
+		<div class="beatWrapper" id="beatWrapper"></div>
+		<div class="buttons_row" id="beatSection">
+			<span class="label">Loops</span> <img id="beat1" class="btnB"
 				src="images/button_off.png"><img id="beat2" class="btnB"
 				src="images/button_off.png"><img id="beat3" class="btnB"
 				src="images/button_off.png"><img id="beat4" class="btnB"
@@ -232,28 +347,28 @@
 			<br />
 		</div>
 		<div class="buttons_row">
-			<span class="label">Tom 2</span> <img dt-nt="a" dt-loc="1"
-				id="Tom2_1" class="btn" src="images/button_off.png"><img
-				dt-nt="b" dt-loc="2" id="Tom2_2" class="btn"
-				src="images/button_off.png"><img dt-nt="c" dt-loc="3"
-				id="Tom2_3" class="btn" src="images/button_off.png"><img
-				dt-nt="d" dt-loc="4" id="Tom2_4" class="btn"
-				src="images/button_off.png"><img dt-nt="5" dt-loc="5"
-				id="Tom2_5" class="btn" src="images/button_off.png"><img
-				id="Tom2_6" class="btn" src="images/button_off.png"><img
-				id="Tom2_7" class="btn" src="images/button_off.png"><img
-				id="Tom2_8" class="btn" src="images/button_off.png"><img
-				id="Tom2_9" class="btn" src="images/button_off.png"><img
-				id="Tom2_10" class="btn" src="images/button_off.png"><img
-				id="Tom2_11" class="btn" src="images/button_off.png"><img
-				id="Tom2_12" class="btn" src="images/button_off.png"><img
-				id="Tom2_13" class="btn" src="images/button_off.png"><img
-				id="Tom2_14" class="btn" src="images/button_off.png"><img
-				id="Tom2_15" class="btn" src="images/button_off.png"><img
-				id="Tom2_16" class="btn" src="images/button_off.png">
+			<span class="label">ins1</span> <img dt-nt="a" dt-loc="1" id="Tom2_1"
+				class="btn" src="images/button_off.png"><img dt-nt="b"
+				dt-loc="2" id="Tom2_2" class="btn" src="images/button_off.png"><img
+				dt-nt="c" dt-loc="3" id="Tom2_3" class="btn"
+				src="images/button_off.png"><img dt-nt="d" dt-loc="4"
+				id="Tom2_4" class="btn" src="images/button_off.png"><img
+				dt-nt="5" dt-loc="5" id="Tom2_5" class="btn"
+				src="images/button_off.png"><img id="Tom2_6" class="btn"
+				src="images/button_off.png"><img id="Tom2_7" class="btn"
+				src="images/button_off.png"><img id="Tom2_8" class="btn"
+				src="images/button_off.png"><img id="Tom2_9" class="btn"
+				src="images/button_off.png"><img id="Tom2_10" class="btn"
+				src="images/button_off.png"><img id="Tom2_11" class="btn"
+				src="images/button_off.png"><img id="Tom2_12" class="btn"
+				src="images/button_off.png"><img id="Tom2_13" class="btn"
+				src="images/button_off.png"><img id="Tom2_14" class="btn"
+				src="images/button_off.png"><img id="Tom2_15" class="btn"
+				src="images/button_off.png"><img id="Tom2_16" class="btn"
+				src="images/button_off.png">
 		</div>
 		<div class="buttons_row">
-			<span class="label">Tom 3</span> <img id="Tom3_1" class="btn"
+			<span class="label">ins1</span> <img id="Tom3_1" class="btn"
 				src="images/button_off.png"><img id="Tom3_2" class="btn"
 				src="images/button_off.png"><img id="Tom3_3" class="btn"
 				src="images/button_off.png"><img id="Tom3_4" class="btn"
@@ -272,7 +387,7 @@
 				src="images/button_off.png">
 		</div>
 		<div class="buttons_row">
-			<span class="label">Hi-Hat</span> <img id="HiHat_1" class="btn"
+			<span class="label">ins1</span> <img id="HiHat_1" class="btn"
 				src="images/button_off.png"><img id="HiHat_2" class="btn"
 				src="images/button_off.png"><img id="HiHat_3" class="btn"
 				src="images/button_off.png"><img id="HiHat_4" class="btn"
@@ -291,7 +406,7 @@
 				src="images/button_off.png">
 		</div>
 		<div class="buttons_row">
-			<span class="label">Snare</span> <img id="Snare_0" class="btn"
+			<span class="label">ins1</span> <img id="Snare_0" class="btn"
 				src="images/button_off.png"><img id="Snare_1" class="btn"
 				src="images/button_off.png"><img id="Snare_2" class="btn"
 				src="images/button_off.png"><img id="Snare_3" class="btn"
@@ -310,7 +425,7 @@
 				src="images/button_off.png">
 		</div>
 		<div class="buttons_row">
-			<span class="label">Kick</span> <img id="Kick_1" class="btn"
+			<span class="label">ins1</span> <img id="Kick_1" class="btn"
 				src="images/button_off.png"><img id="Kick_2" class="btn"
 				src="images/button_off.png"><img id="Kick_3" class="btn"
 				src="images/button_off.png"><img id="Kick_4" class="btn"
@@ -329,7 +444,7 @@
 				src="images/button_off.png">
 		</div>
 		<div class="buttons_row">
-			<span class="label">Kick</span> <img id="Kick_a1" class="btn"
+			<span class="label">ins1</span> <img id="Kick_a1" class="btn"
 				src="images/button_off.png"><img id="Kick_a2" class="btn"
 				src="images/button_off.png"><img id="Kick_a3" class="btn"
 				src="images/button_off.png"><img id="Kick_a4" class="btn"
