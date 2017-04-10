@@ -58,13 +58,11 @@ public class HomeController {
 		return "sample4";
 	}
 
-
 	@RequestMapping(value = "/sample5", method = RequestMethod.GET)
 	public String sample5() {
 
 		return "sample5";
 	}
-
 
 	@RequestMapping(value = "/sample6", method = RequestMethod.GET)
 	public String sample6() {
@@ -72,11 +70,16 @@ public class HomeController {
 		return "sample6";
 	}
 
-
 	@RequestMapping(value = "/sample7", method = RequestMethod.GET)
 	public String sample7() {
 
 		return "sample7";
+	}
+
+	@RequestMapping(value = "/sample8", method = RequestMethod.GET)
+	public String sample8() {
+
+		return "sample8";
 	}
 
 }

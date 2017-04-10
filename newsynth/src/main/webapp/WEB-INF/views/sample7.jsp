@@ -70,6 +70,8 @@
 <script type="text/javascript">
 
 	$(function() {
+		$("#play").attr("src", "images/btn_play.png");
+
 		$(".btnB").on("click", function() {
 			var theOne = $(this);
 			var oneId = theOne.attr("id");
@@ -195,6 +197,17 @@
 <title>Insert title here</title>
 </head>
 <body>
+
+	<!-- Preload some important UI elements -->
+	<img class="preload" src='images/btn_play.png'>
+	<img class="preload" src='images/btn_load.png'>
+	<img class="preload" src='images/btn_reset.png'>
+	<img class="preload" src='images/btn_save.png'>
+	<img class="preload" src='images/button_off.png'>
+	<img class="preload" src='images/button_half.png'>
+	<img class="preload" src='images/button_on.png'>
+	<img class="preload" src='images/LED_on.png'>
+
 	<div class="container active" id="pad">
 		<div class="buttons_row">
 			<span class="label">Beat</span> <img id="beat1" class="btnB"
@@ -359,7 +372,7 @@
 	</div>
 	<div class="container active" id="tools">
 		<span class="label" id="beatlabel">Beat</span> <img id="play"
-			src="images/btn_play.png" width="80" height="33"> <img
+			src="images/btn_play_loading.png" width="80" height="33"> <img
 			id="stop" src="images/btn_stop.png" width="80" height="33"> <img
 			id="save" src="images/btn_save.png"> <img id="load"
 			src="images/btn_load.png"> <img id="reset"
