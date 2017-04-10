@@ -76,7 +76,7 @@
 
 			$(".btnB").attr("src", "images/button_off.png");
 			var purr = ("beat/" + oneId.substr(4, oneId.length) + ".wav");
-			var btUrl = ("beat " + oneId.substr(4, oneId.length));
+			var btUrl = (oneId.substr(4, oneId.length));
 			loadMusic(purr);
 			theOne.attr("src", "images/button_on.png");
 			muArray.beat = btUrl;
@@ -107,20 +107,24 @@
 			mkCode();
 		});
 
-		var inter;
+		var interPlay;
+		var interLed;
 		$("#play").on("click", function() {
-			$(this).addClass("playing");
-			$("#stop").addClass("playing");
-			mkCode();
 			if (muArray.beat != "") {
+				var theTimes = bpm * 1000;
+				$(this).addClass("playing");
+				$("#stop").addClass("playing");
+				mkCode();
 				goLed();
 				goPlay();
-				inter = setInterval(goLed, bpm * 1000);
+				interPlay = setInterval(goPlay, theTimes);
+				interLed = setInterval(goLed, theTimes);
 			}
 		});
 
 		$("#stop").on("click", function() {
-			clearInterval(inter);
+			clearInterval(interPlay);
+			clearInterval(interLed);
 			initLeds();
 			$(this).removeClass("playing");
 			$("#play").removeClass("playing");
@@ -131,7 +135,7 @@
 		var beat = muArray.beat;
 		var notes = muArray.notes;
 		var theCode = "";
-		theCode += beat + "{\n loop 1 \n}"
+		theCode += "beat " + beat + "{\n loop 1 \n}"
 		theCode += "\n";
 		if (muArray.notes.length != 0) {
 			theCode += "\nins PI01{\n";
@@ -184,6 +188,7 @@
 	function goPlay() {
 		var beat = muArray.beat;
 		var notes = muArray.notes;
+		mkSound("beat/" + beat + ".wav", 0);
 	}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
