@@ -9,29 +9,6 @@
 <script src="resources/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
 
-	var noteEx = {
-		"ins" : "R8",
-		"note" : "snare",
-		"location" : 2
-	};
-
-	var bpm;
-	var tempo;
-	var beat;
-	var usedIns = [];
-
-	var note = {
-		"ins" : "",
-		"note" : "",
-		"location" : 0
-	};
-	var muArray = {
-		"beat" : "",
-		"notes" : []
-	};
-
-	var drumSet = [ "hihat", "kick", "snare", "tom1", "tom2", "tom3" ];
-
 	Map = function() {
 		this.map = new Object();
 	};
@@ -84,6 +61,35 @@
 			return count;
 		}
 	};
+
+
+	var noteEx = {
+		"ins" : "R8",
+		"note" : "snare",
+		"location" : 2
+	};
+
+	var interPlay;
+	var interLed;
+	var bpm;
+	var tempo;
+	var beat;
+	var usedIns = [];
+
+	var note = {
+		"ins" : "",
+		"note" : "",
+		"location" : 0
+	};
+	var muArray = {
+		"beat" : "",
+		"notes" : []
+	};
+
+	var muMap = new Map();
+
+	var drumSet = [ "hihat", "kick", "snare", "tom1", "tom2", "tom3" ];
+	var insSet = [ "Guitar_C", "Guitar_N" ];
 
 
 	var ctx = new AudioContext();
@@ -150,13 +156,14 @@
 
 		var status = $(this).attr("src");
 		if (status == "images/button_off.png") {
+			var instname = theOne.attr("dt-ins");
 			theOne.attr("src", "images/button_on.png");
 			muArray.notes.push({
-				"ins" : theOne.attr("dt-ins"),
+				"ins" : instname,
 				"note" : theOne.attr("dt-nt"),
 				"location" : theOne.attr("dt-loc")
 			});
-			usedIns.push(theOne.attr("dt-ins"));
+
 
 		/* muArray.notes.push({
 			"note" : theOne.attr("dt-nt"),
@@ -170,47 +177,48 @@
 			$.each(muArray.notes, function(index, item) {
 				if (item.note == nnt && item.location == nlc && item.ins == nin) {
 					muArray.notes.splice(index, 1);
-
 				}
 			});
 		}
 		mkCode();
 	}
 
+	function goPlayCode() {
+		console.log("playCode is Activated");
+		var theTimes = bpm * 1000;
+		$(this).addClass("playing");
+		$("#stop").addClass("playing");
+		mkCode();
+		goLed();
+		goPlay();
+		interPlay = setInterval(goPlay, theTimes);
+		interLed = setInterval(goLed, theTimes);
+	}
+
+	function stopPlayCode() {
+		clearInterval(interPlay);
+		clearInterval(interLed);
+		initLeds();
+		$(this).removeClass("playing");
+		$("#play").removeClass("playing");
+	}
+
 	$(function() {
 		$("#play").attr("src", "images/btn_play.png");
 
 		$(".btnB").on("click", btnBEvent);
-
 		$(".btn").on("click", btnEvent);
-
-		var interPlay;
-		var interLed;
-		$("#play").on("click", function() {
-			if (muArray.beat != "") {
-				var theTimes = bpm * 1000;
-				$(this).addClass("playing");
-				$("#stop").addClass("playing");
-				mkCode();
-				goLed();
-				goPlay();
-				interPlay = setInterval(goPlay, theTimes);
-				interLed = setInterval(goLed, theTimes);
-			}
-		});
-
-		$("#stop").on("click", function() {
-			clearInterval(interPlay);
-			clearInterval(interLed);
-			initLeds();
-			$(this).removeClass("playing");
-			$("#play").removeClass("playing");
-		});
+		$("#play").on("click", goPlayCode);
+		$("#stop").on("click", stopPlayCode);
 
 		$("#beatSelection").on("change", function() {
 			var selected = $(this).val();
 			var theContents = "";
 			var basicPadSize = 330;
+			muArray.beat = "";
+			bpm = 0;
+			tempo = 0;
+			muArray.notes = [];
 
 			switch (selected) {
 			case "Loops":
@@ -222,7 +230,10 @@
 				theContents += "</div>";
 				break;
 			case "R8":
-			case "Acu":
+			case "ACU":
+				theContents += "<div id='tempodisplay'><span id='tempo'>120</span>&nbsp;<span id='bpm'>bpm</span></div>";
+				theContents += "<span id='tempocontrol'><img src='images/tempo_dec.png' id='tempodec'>"
+				theContents += "<img src='images/tempo_inc.png' id='tempoinc'></span>"
 				$.each(drumSet, function(index, item) {
 					theContents += "<div class='buttons_row'>";
 					theContents += "<span class='label'>" + item + "</span> ";
@@ -236,31 +247,78 @@
 			}
 			$("#beatSection").html(theContents);
 			$("#pad").css("height", basicPadSize + "px");
+
 			$(".btnB").on("click", btnBEvent);
 			$(".btn").on("click", btnEvent);
 
+			tmpControl();
+
 		});
+
+
 	});
 
+	function tmpControl() {
+		$("#tempodec").on("click", function() {
+			var bpmNow = Number($("#tempo").text());
+			console.log("tempodec is on" + bpmNow);
+			bpmNow -= 5;
+			$("#tempo").text(bpmNow);
+			bpm = (bpmNow) / 60;
+			tempo = bpm / 16;
+		});
+		$("#tempoinc").on("click", function() {
+			var bpmNow = Number($("#tempo").text());
+			console.log("tempoinc is on" + bpmNow);
+			bpmNow += 5;
+			$("#tempo").text(bpmNow);
+			bpm = bpmNow / 60;
+			tempo = bpm / 16;
+		});
+		console.log("tmp Control loaded //==" + bpm);
+	}
+
 	function mkCode() {
+		sortResults("ins", true);
 		var beat = muArray.beat;
 		var ins = muArray.ins;
-		var insColl = new Map();
 		var theCode = "";
-		theCode += "beat " + beat + "{\n loop 1 \n}"
-		theCode += "\n";
+		if (beat != "") {
+			theCode += "beat " + beat + "{\n do 1 \n}"
+			theCode += "\n";
+		}
+		var temp;
+		var leng = muArray.notes.length;
+		console.log("theNotes Size==" + leng);
 		$.each(muArray.notes, function(num, who) {
-			insColl.put(who.ins, "");
-			theCode += "\nins" + who.ins + "{\n";
-			theCode += "location 1;\n";
+			console.log("Each Num==" + num);
+			var theIns = who.ins;
+			var isChange = (num == 0 || temp != theIns);
+			if (isChange) {
+				theCode += "\nins " + theIns + "{\n";
+				theCode += "location 1;\n";
+				temp = theIns;
+			}
 			theCode += "note(" + who.note + "," + who.location + ");\n";
-			theCode += "}";
+			if (num + 1 == leng ? true : (muArray.notes[num + 1].ins != theIns)) {
+				theCode += "}\n";
+			}
 		});
 
 
 		$("#styled").text(theCode);
 	}
 
+
+	function sortResults(prop, asc) {
+		muArray.notes = muArray.notes.sort(function(a, b) {
+			if (asc) {
+				return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+			} else {
+				return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+			}
+		});
+	}
 	function goLed() {
 		onLeds();
 		offLeds();
@@ -301,7 +359,13 @@
 	function goPlay() {
 		var beat = muArray.beat;
 		var notes = muArray.notes;
-		mkSound("beat/" + beat + ".wav", 0);
+		if (beat != "") {
+			mkSound("beat/" + beat + ".wav", 0);
+		}
+		$.each(notes, function(ind, nt) {
+			console.log("note is playing");
+			mkSound("notes/drum/" + nt.ins + "/" + nt.note + ".wav", (tempo * nt.location));
+		});
 	}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -322,10 +386,9 @@
 	<div class="container active" id="pad">
 		<div class="selectLine">
 			<select id="beatSelection"><option value="Loops">MadeSet</option>
-				<option value="Acu">Acustic</option>
+				<option value="ACU">Acustic</option>
 				<option value="R8">R8</option></select>
 		</div>
-		<div class="beatWrapper" id="beatWrapper"></div>
 		<div class="buttons_row" id="beatSection">
 			<span class="label">Loops</span> <img id="beat1" class="btnB"
 				src="images/button_off.png"><img id="beat2" class="btnB"
@@ -489,7 +552,7 @@
 	</div>
 	<div class="container active" id="tools">
 		<span class="label" id="beatlabel">Beat</span> <img id="play"
-			src="images/btn_play_loading.png" width="80" height="33"> <img
+			src="images/btn_play.png" width="80" height="33"> <img
 			id="stop" src="images/btn_stop.png" width="80" height="33"> <img
 			id="save" src="images/btn_save.png"> <img id="load"
 			src="images/btn_load.png"> <img id="reset"
