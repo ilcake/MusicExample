@@ -245,10 +245,12 @@
 	function mkCode() {
 		var beat = muArray.beat;
 		var ins = muArray.ins;
+		var insColl = new Map();
 		var theCode = "";
 		theCode += "beat " + beat + "{\n loop 1 \n}"
 		theCode += "\n";
 		$.each(muArray.notes, function(num, who) {
+			insColl.put(who.ins, "");
 			theCode += "\nins" + who.ins + "{\n";
 			theCode += "location 1;\n";
 			theCode += "note(" + who.note + "," + who.location + ");\n";
