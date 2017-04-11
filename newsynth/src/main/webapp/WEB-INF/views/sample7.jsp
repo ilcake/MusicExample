@@ -89,7 +89,7 @@
 	var muMap = new Map();
 
 	var drumSet = [ "hihat", "kick", "snare", "tom1", "tom2", "tom3" ];
-	var insSet = [ "Guitar_C", "Guitar_N" ];
+	var insSet = [ "Guitar_C", "Guitar_N", "Piano" ];
 
 
 	var ctx = new AudioContext();
@@ -416,11 +416,9 @@
 				src="images/button_off.png"><img id="beat16" class="btnB"
 				src="images/button_off.png">
 		</div>
-		<div>
-			<br />
-		</div>
+		<div></div>
 		<div class="selectLine">
-			<span>Ins</span> <select id="InsSelection"><option
+			<img src="images/ins_add.png"><select id="InsSelection"><option
 					value="guitar_c">Guitar_Code</option>
 				<option value="guitar_n">Guitar_Note</option>
 				<option value="piano">Piano</option></select>
