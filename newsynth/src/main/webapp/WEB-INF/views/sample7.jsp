@@ -214,10 +214,9 @@
 		$("#beatSelection").on("change", function() {
 			var selected = $(this).val();
 			var theContents = "";
-			var basicPadSize = 330;
+			var basicPadSize = 120;
 			muArray.beat = "";
-			bpm = 0;
-			tempo = 0;
+			bpm = 120;
 			muArray.notes = [];
 
 			switch (selected) {
@@ -252,6 +251,7 @@
 			$(".btn").on("click", btnEvent);
 
 			tmpControl();
+			goNewTempo(120);
 
 		});
 
@@ -259,25 +259,31 @@
 	});
 
 	function tmpControl() {
+		var bpmNow = Number($("#tempo").text());
+		$("#tempo").text(bpmNow);
+
+
 		$("#tempodec").on("click", function() {
 			var bpmNow = Number($("#tempo").text());
-			console.log("tempodec is on" + bpmNow);
 			bpmNow -= 5;
+			console.log("tempodec is on" + bpmNow);
 			$("#tempo").text(bpmNow);
-			bpm = (bpmNow) / 60;
-			tempo = bpm / 16;
+			goNewTempo(bpmNow);
 		});
 		$("#tempoinc").on("click", function() {
 			var bpmNow = Number($("#tempo").text());
-			console.log("tempoinc is on" + bpmNow);
 			bpmNow += 5;
+			console.log("tempoinc is on" + bpmNow);
 			$("#tempo").text(bpmNow);
-			bpm = bpmNow / 60;
-			tempo = bpm / 16;
+			goNewTempo(bpmNow);
 		});
 		console.log("tmp Control loaded //==" + bpm);
 	}
-
+	function goNewTempo(theod) {
+		var theTempoValue = 16;
+		bpm = ((theTempoValue * 60) / theod) / 4;
+		tempo = bpm / theTempoValue;
+	}
 	function mkCode() {
 		sortResults("ins", true);
 		var beat = muArray.beat;
@@ -347,7 +353,7 @@
 	function offLeds() {
 		for (var i = 1; i < 17; i++) {
 			var thisMan = ("#LED_" + i);
-			var theTime = (tempo * i * 1000) + 120;
+			var theTime = (tempo * i * 1000) + (tempo * 1000);
 			mkOffLed(thisMan, theTime);
 		}
 	}
@@ -385,10 +391,12 @@
 
 	<div class="container active" id="pad">
 		<div class="selectLine">
-			<select id="beatSelection"><option value="Loops">MadeSet</option>
+			<span>Beats</span> <select id="beatSelection"><option
+					value="Loops">MadeSet</option>
 				<option value="ACU">Acustic</option>
 				<option value="R8">R8</option></select>
 		</div>
+
 		<div class="buttons_row" id="beatSection">
 			<span class="label">Loops</span> <img id="beat1" class="btnB"
 				src="images/button_off.png"><img id="beat2" class="btnB"
@@ -411,7 +419,13 @@
 		<div>
 			<br />
 		</div>
-		<div class="buttons_row">
+		<div class="selectLine">
+			<span>Ins</span> <select id="InsSelection"><option
+					value="guitar_c">Guitar_Code</option>
+				<option value="guitar_n">Guitar_Note</option>
+				<option value="piano">Piano</option></select>
+		</div>
+		<!-- <div class="buttons_row">
 			<span class="label">ins1</span> <img dt-nt="a" dt-loc="1" id="Tom2_1"
 				class="btn" src="images/button_off.png"><img dt-nt="b"
 				dt-loc="2" id="Tom2_2" class="btn" src="images/button_off.png"><img
@@ -526,7 +540,7 @@
 				src="images/button_off.png"><img id="Kick_a15" class="btn"
 				src="images/button_off.png"><img id="Kick_a16" class="btn"
 				src="images/button_off.png">
-		</div>
+		</div> -->
 		<div class="buttons_row" id="LED_row">
 			<span class="label"></span> <img class="leds" id="LED_1"
 				src="images/LED_off.png"><img class="leds" id="LED_2"
