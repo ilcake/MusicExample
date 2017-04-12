@@ -8,6 +8,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.0/Pizzicato.js"></script>
 <script src="resources/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
+	var fullPadSize = 120;
 
 	Map = function() {
 		this.map = new Object();
@@ -89,7 +90,16 @@
 	var muMap = new Map();
 
 	var drumSet = [ "hihat", "kick", "snare", "tom1", "tom2", "tom3" ];
-	var insSet = [ "Guitar_C", "Guitar_N", "Piano" ];
+	var insMap = new Map();
+	insMap.put("guitar_c", [ "A", "Am", "B", "Bm", "C", "Cm", "D", "Dm", "E", "Em", "F", "Fm", "G", "Gm" ]);
+	insMap.put("guitar_n", [ "A1", "A2", "A3", "B1", "B2", "B3", "C2", "C3", "C4", "D2", "D3", "E1", "E2", "E3", "E4", "F#1", "F#2", "G2", "G3", "G4" ]);
+	insMap.put("piano", []);
+	insMap.put("drumSet", drumSet);
+	var insSet = {
+		"guitar_c" : [ "A", "Am", "B", "Bm", "C", "Cm", "D", "Dm", "E", "Em", "F", "Fm", "G", "Gm" ],
+		"guitar_n" : [ "A1", "A2", "A3", "B1", "B2", "B3", "C2", "C3", "C4", "D2", "D3", "E1", "E2", "E3", "E4", "F#1", "F#2", "G2", "G3", "G4" ],
+		"piano" : []
+	};
 
 
 	var ctx = new AudioContext();
@@ -211,53 +221,81 @@
 		$("#play").on("click", goPlayCode);
 		$("#stop").on("click", stopPlayCode);
 
-		$("#beatSelection").on("change", function() {
-			var selected = $(this).val();
-			var theContents = "";
-			var basicPadSize = 120;
-			muArray.beat = "";
-			bpm = 120;
-			muArray.notes = [];
+		$("#ins_add").on("click", mkInsLine);
 
-			switch (selected) {
-			case "Loops":
-				theContents += "<div class='buttons_row'>";
-				theContents += "<span class='label'>" + selected + "</span> ";
-				for (var i = 1; i < 17; i++) {
-					theContents += "<img dt-nt='beat" + i + "' id='beat" + i + "' class='btnB' src='images/button_off.png'>";
-				}
-				theContents += "</div>";
-				break;
-			case "R8":
-			case "ACU":
-				theContents += "<div id='tempodisplay'><span id='tempo'>120</span>&nbsp;<span id='bpm'>bpm</span></div>";
-				theContents += "<span id='tempocontrol'><img src='images/tempo_dec.png' id='tempodec'>"
-				theContents += "<img src='images/tempo_inc.png' id='tempoinc'></span>"
-				$.each(drumSet, function(index, item) {
-					theContents += "<div class='buttons_row'>";
-					theContents += "<span class='label'>" + item + "</span> ";
-					for (var i = 1; i < 17; i++) {
-						theContents += "<img dt-ins='" + selected + "' dt-nt='" + item + "' dt-loc='" + i + "' id='" + item + "_" + i + "' class='btn' src='images/button_off.png'>";
-					}
-					theContents += "</div>"
-					basicPadSize = basicPadSize + 41.33;
-				});
-				break;
-			}
-			$("#beatSection").html(theContents);
-			$("#pad").css("height", basicPadSize + "px");
-
-			$(".btnB").on("click", btnBEvent);
-			$(".btn").on("click", btnEvent);
-
-			tmpControl();
-			goNewTempo(120);
-
-		});
+		$("#beatSelection").on("change", mkBeatLine);
 
 
 	});
 
+	function mkInsLine() {
+		var selected = $("#InsSelection").val();
+		var theContents = "";
+		var plusSize = 60;
+		theContents += "<div class='Ins" + selected + "'><span class='label'>" + selected + "</span><img src='images/ins_remove.png' id='removeIns" + selected + "'></div>";
+		$.each(insMap.get(selected), function(index, item) {
+			theContents += "<div class='buttons_row'>";
+			theContents += "<span class='label'>" + item + "</span> ";
+			for (var i = 1; i < 17; i++) {
+				theContents += "<img dt-ins='" + selected + "' dt-nt='" + item + "' dt-loc='" + i + "' id='" + item + "_" + i + "' class='btn' src='images/button_off.png'>";
+			}
+			theContents += "</div>";
+			plusSize += 41.33;
+		});
+
+
+		$("#pad").append(theContents);
+		$("#pad").css("height", fullPadSize + plusSize + "px");
+
+
+		$(".btn").on("click", btnEvent);
+	}
+
+	function mkBeatLine() {
+		var selected = $(this).val();
+		var theContents = "";
+		var basicPadSize = 120;
+		var plusSize = 0;
+		muArray.beat = "";
+		bpm = 120;
+		muArray.notes = [];
+
+		switch (selected) {
+		case "Loops":
+			theContents += "<div class='buttons_row'>";
+			theContents += "<span class='label'>" + selected + "</span> ";
+			for (var i = 1; i < 17; i++) {
+				theContents += "<img dt-nt='beat" + i + "' id='beat" + i + "' class='btnB' src='images/button_off.png'>";
+			}
+			theContents += "</div>";
+			break;
+		case "R8":
+		case "ACU":
+			theContents += "<div id='tempodisplay'><span id='tempo'>120</span>&nbsp;<span id='bpm'>bpm</span></div>";
+			theContents += "<span id='tempocontrol'><img src='images/tempo_dec.png' id='tempodec'>"
+			theContents += "<img src='images/tempo_inc.png' id='tempoinc'></span>"
+			$.each(drumSet, function(index, item) {
+				theContents += "<div class='buttons_row'>";
+				theContents += "<span class='label'>" + item + "</span> ";
+				for (var i = 1; i < 17; i++) {
+					theContents += "<img dt-ins='" + selected + "' dt-nt='" + item + "' dt-loc='" + i + "' id='" + item + "_" + i + "' class='btn' src='images/button_off.png'>";
+				}
+				theContents += "</div>";
+				plusSize += 41.33;
+			});
+			break;
+		}
+		$("#beatSection").html(theContents);
+		$("#pad").css("height", basicPadSize + plusSize + "px");
+		fullPadSize = basicPadSize + plusSize;
+
+		$(".btnB").on("click", btnBEvent);
+		$(".btn").on("click", btnEvent);
+
+		tmpControl();
+		goNewTempo(120);
+
+	}
 	function tmpControl() {
 		var bpmNow = Number($("#tempo").text());
 		$("#tempo").text(bpmNow);
@@ -370,7 +408,11 @@
 		}
 		$.each(notes, function(ind, nt) {
 			console.log("note is playing");
-			mkSound("notes/drum/" + nt.ins + "/" + nt.note + ".wav", (tempo * nt.location));
+			if (nt.ins == "R8" || nt.ins == "ACU") {
+				mkSound("notes/drum/" + nt.ins + "/" + nt.note + ".wav", (tempo * nt.location));
+			} else if (nt.ins == "guitar_c" || nt.ins == "guitar_n" || nt.ins == "piano") {
+				mkSound("notes/" + nt.ins + "/" + nt.note + ".wav", (tempo * nt.location));
+			}
 		});
 	}
 </script>
@@ -418,8 +460,8 @@
 		</div>
 		<div></div>
 		<div class="selectLine">
-			<img src="images/ins_add.png"><select id="InsSelection"><option
-					value="guitar_c">Guitar_Code</option>
+			<img src="images/ins_add.png" id="ins_add"><select
+				id="InsSelection"><option value="guitar_c">Guitar_Code</option>
 				<option value="guitar_n">Guitar_Note</option>
 				<option value="piano">Piano</option></select>
 		</div>
