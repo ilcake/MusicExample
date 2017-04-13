@@ -91,6 +91,16 @@ body {
 	border: 0;
 }
 
+.btn {
+	width: 38px;
+	height: 38px;
+}
+
+.btnB {
+	width: 38px;
+	height: 38px;
+}
+
 #kitlabel, #effectlabel, #swinglabel {
 	top: 6px;
 }

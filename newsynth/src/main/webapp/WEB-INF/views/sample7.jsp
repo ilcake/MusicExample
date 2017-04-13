@@ -10,6 +10,9 @@
 <script type="text/javascript">
 	var fullPadSize = 120;
 
+	var thePicked = [];
+
+
 	Map = function() {
 		this.map = new Object();
 	};
@@ -166,15 +169,19 @@
 
 		var status = $(this).attr("src");
 		if (status == "images/button_off.png") {
-			var instname = theOne.attr("dt-ins");
+			var insData = theOne.attr("dt-ins");
+			var ntData = theOne.attr("dt-nt");
+			var locData = theOne.attr("dt-loc");
 			theOne.attr("src", "images/button_on.png");
+
 			muArray.notes.push({
-				"ins" : instname,
-				"note" : theOne.attr("dt-nt"),
-				"location" : theOne.attr("dt-loc")
+				"ins" : insData,
+				"note" : ntData,
+				"location" : locData
 			});
-
-
+			theOne.attr("id", insData + "-" + ntData + "-" + locData);
+			thePicked.push(insData + "-" + ntData + "-" + locData);
+			thePicked.sort();
 		/* muArray.notes.push({
 			"note" : theOne.attr("dt-nt"),
 			"location" : theOne.attr("dt-loc")
@@ -184,13 +191,18 @@
 			var nin = theOne.attr("dt-ins");
 			var nnt = theOne.attr("dt-nt");
 			var nlc = theOne.attr("dt-loc");
+			var who = thePicked.indexOf(insData + "-" + ntData + "-" + locData);
+			thePicked.splice(who, 1);
 			$.each(muArray.notes, function(index, item) {
+				console.log("item.note = " + item.note + "    //  item.loc = " + item.location);
 				if (item.note == nnt && item.location == nlc && item.ins == nin) {
 					muArray.notes.splice(index, 1);
 				}
 			});
 		}
 		mkCode();
+
+		console.log(thePicked);
 	}
 
 	function goPlayCode() {
@@ -465,122 +477,7 @@
 				<option value="guitar_n">Guitar_Note</option>
 				<option value="piano">Piano</option></select>
 		</div>
-		<!-- <div class="buttons_row">
-			<span class="label">ins1</span> <img dt-nt="a" dt-loc="1" id="Tom2_1"
-				class="btn" src="images/button_off.png"><img dt-nt="b"
-				dt-loc="2" id="Tom2_2" class="btn" src="images/button_off.png"><img
-				dt-nt="c" dt-loc="3" id="Tom2_3" class="btn"
-				src="images/button_off.png"><img dt-nt="d" dt-loc="4"
-				id="Tom2_4" class="btn" src="images/button_off.png"><img
-				dt-nt="5" dt-loc="5" id="Tom2_5" class="btn"
-				src="images/button_off.png"><img id="Tom2_6" class="btn"
-				src="images/button_off.png"><img id="Tom2_7" class="btn"
-				src="images/button_off.png"><img id="Tom2_8" class="btn"
-				src="images/button_off.png"><img id="Tom2_9" class="btn"
-				src="images/button_off.png"><img id="Tom2_10" class="btn"
-				src="images/button_off.png"><img id="Tom2_11" class="btn"
-				src="images/button_off.png"><img id="Tom2_12" class="btn"
-				src="images/button_off.png"><img id="Tom2_13" class="btn"
-				src="images/button_off.png"><img id="Tom2_14" class="btn"
-				src="images/button_off.png"><img id="Tom2_15" class="btn"
-				src="images/button_off.png"><img id="Tom2_16" class="btn"
-				src="images/button_off.png">
-		</div>
-		<div class="buttons_row">
-			<span class="label">ins1</span> <img id="Tom3_1" class="btn"
-				src="images/button_off.png"><img id="Tom3_2" class="btn"
-				src="images/button_off.png"><img id="Tom3_3" class="btn"
-				src="images/button_off.png"><img id="Tom3_4" class="btn"
-				src="images/button_off.png"><img id="Tom3_5" class="btn"
-				src="images/button_off.png"><img id="Tom3_6" class="btn"
-				src="images/button_off.png"><img id="Tom3_7" class="btn"
-				src="images/button_off.png"><img id="Tom3_8" class="btn"
-				src="images/button_off.png"><img id="Tom3_9" class="btn"
-				src="images/button_off.png"><img id="Tom3_10" class="btn"
-				src="images/button_off.png"><img id="Tom3_11" class="btn"
-				src="images/button_off.png"><img id="Tom3_12" class="btn"
-				src="images/button_off.png"><img id="Tom3_13" class="btn"
-				src="images/button_off.png"><img id="Tom3_14" class="btn"
-				src="images/button_off.png"><img id="Tom3_15" class="btn"
-				src="images/button_off.png"><img id="Tom3_16" class="btn"
-				src="images/button_off.png">
-		</div>
-		<div class="buttons_row">
-			<span class="label">ins1</span> <img id="HiHat_1" class="btn"
-				src="images/button_off.png"><img id="HiHat_2" class="btn"
-				src="images/button_off.png"><img id="HiHat_3" class="btn"
-				src="images/button_off.png"><img id="HiHat_4" class="btn"
-				src="images/button_off.png"><img id="HiHat_5" class="btn"
-				src="images/button_off.png"><img id="HiHat_6" class="btn"
-				src="images/button_off.png"><img id="HiHat_7" class="btn"
-				src="images/button_off.png"><img id="HiHat_8" class="btn"
-				src="images/button_off.png"><img id="HiHat_9" class="btn"
-				src="images/button_off.png"><img id="HiHat_10" class="btn"
-				src="images/button_off.png"><img id="HiHat_11" class="btn"
-				src="images/button_off.png"><img id="HiHat_12" class="btn"
-				src="images/button_off.png"><img id="HiHat_13" class="btn"
-				src="images/button_off.png"><img id="HiHat_14" class="btn"
-				src="images/button_off.png"><img id="HiHat_15" class="btn"
-				src="images/button_off.png"><img id="HiHat_16" class="btn"
-				src="images/button_off.png">
-		</div>
-		<div class="buttons_row">
-			<span class="label">ins1</span> <img id="Snare_0" class="btn"
-				src="images/button_off.png"><img id="Snare_1" class="btn"
-				src="images/button_off.png"><img id="Snare_2" class="btn"
-				src="images/button_off.png"><img id="Snare_3" class="btn"
-				src="images/button_off.png"><img id="Snare_4" class="btn"
-				src="images/button_off.png"><img id="Snare_5" class="btn"
-				src="images/button_off.png"><img id="Snare_6" class="btn"
-				src="images/button_off.png"><img id="Snare_7" class="btn"
-				src="images/button_off.png"><img id="Snare_8" class="btn"
-				src="images/button_off.png"><img id="Snare_9" class="btn"
-				src="images/button_off.png"><img id="Snare_10" class="btn"
-				src="images/button_off.png"><img id="Snare_11" class="btn"
-				src="images/button_off.png"><img id="Snare_12" class="btn"
-				src="images/button_off.png"><img id="Snare_13" class="btn"
-				src="images/button_off.png"><img id="Snare_14" class="btn"
-				src="images/button_off.png"><img id="Snare_15" class="btn"
-				src="images/button_off.png">
-		</div>
-		<div class="buttons_row">
-			<span class="label">ins1</span> <img id="Kick_1" class="btn"
-				src="images/button_off.png"><img id="Kick_2" class="btn"
-				src="images/button_off.png"><img id="Kick_3" class="btn"
-				src="images/button_off.png"><img id="Kick_4" class="btn"
-				src="images/button_off.png"><img id="Kick_5" class="btn"
-				src="images/button_off.png"><img id="Kick_6" class="btn"
-				src="images/button_off.png"><img id="Kick_7" class="btn"
-				src="images/button_off.png"><img id="Kick_8" class="btn"
-				src="images/button_off.png"><img id="Kick_9" class="btn"
-				src="images/button_off.png"><img id="Kick_10" class="btn"
-				src="images/button_off.png"><img id="Kick_11" class="btn"
-				src="images/button_off.png"><img id="Kick_12" class="btn"
-				src="images/button_off.png"><img id="Kick_13" class="btn"
-				src="images/button_off.png"><img id="Kick_14" class="btn"
-				src="images/button_off.png"><img id="Kick_15" class="btn"
-				src="images/button_off.png"><img id="Kick_16" class="btn"
-				src="images/button_off.png">
-		</div>
-		<div class="buttons_row">
-			<span class="label">ins1</span> <img id="Kick_a1" class="btn"
-				src="images/button_off.png"><img id="Kick_a2" class="btn"
-				src="images/button_off.png"><img id="Kick_a3" class="btn"
-				src="images/button_off.png"><img id="Kick_a4" class="btn"
-				src="images/button_off.png"><img id="Kick_a5" class="btn"
-				src="images/button_off.png"><img id="Kick_a6" class="btn"
-				src="images/button_off.png"><img id="Kick_a7" class="btn"
-				src="images/button_off.png"><img id="Kick_a8" class="btn"
-				src="images/button_off.png"><img id="Kick_a9" class="btn"
-				src="images/button_off.png"><img id="Kick_a10" class="btn"
-				src="images/button_off.png"><img id="Kick_a11" class="btn"
-				src="images/button_off.png"><img id="Kick_a12" class="btn"
-				src="images/button_off.png"><img id="Kick_a13" class="btn"
-				src="images/button_off.png"><img id="Kick_a14" class="btn"
-				src="images/button_off.png"><img id="Kick_a15" class="btn"
-				src="images/button_off.png"><img id="Kick_a16" class="btn"
-				src="images/button_off.png">
-		</div> -->
+
 		<div class="buttons_row" id="LED_row">
 			<span class="label"></span> <img class="leds" id="LED_1"
 				src="images/LED_off.png"><img class="leds" id="LED_2"
