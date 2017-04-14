@@ -8,6 +8,8 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.0/Pizzicato.js"></script>
 <script src="resources/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
+	//the Merge
+	var what;
 	var fullPadSize = 120;
 
 	var thePicked = [];
@@ -213,7 +215,7 @@
 		mkCode();
 		goLed();
 		goPlay();
-		interPlay = setInterval(goPlay, theTimes);
+		//interPlay = setInterval(goPlay, theTimes);
 		interLed = setInterval(goLed, theTimes);
 	}
 
@@ -415,17 +417,31 @@
 	function goPlay() {
 		var beat = muArray.beat;
 		var notes = muArray.notes;
-		if (beat != "") {
-			mkSound("beat/" + beat + ".wav", 0);
-		}
-		$.each(notes, function(ind, nt) {
-			console.log("note is playing");
-			if (nt.ins == "R8" || nt.ins == "ACU") {
-				mkSound("notes/drum/" + nt.ins + "/" + nt.note + ".wav", (tempo * nt.location));
-			} else if (nt.ins == "guitar_c" || nt.ins == "guitar_n" || nt.ins == "piano") {
-				mkSound("notes/" + nt.ins + "/" + nt.note + ".wav", (tempo * nt.location));
+		mkCode();
+		var theCodeResult = $("#styled").text();
+		console.log("Here We Go : " + theCodeResult);
+		$.ajax({
+			url : "compile",
+			data : theCodeResult,
+			type : "POST",
+			success : function(resp) {
+				console.log("success   //" + resp);
+			},
+			error : function(resp) {
+				console.log("err    //" + resp);
 			}
 		});
+	/* if (beat != "") {
+		mkSound("beat/" + beat + ".wav", 0);
+	}
+	$.each(notes, function(ind, nt) {
+		console.log("note is playing");
+		if (nt.ins == "R8" || nt.ins == "ACU") {
+			mkSound("notes/drum/" + nt.ins + "/" + nt.note + ".wav", (tempo * nt.location));
+		} else if (nt.ins == "guitar_c" || nt.ins == "guitar_n" || nt.ins == "piano") {
+			mkSound("notes/" + nt.ins + "/" + nt.note + ".wav", (tempo * nt.location));
+		}
+	}); */
 	}
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

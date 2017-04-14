@@ -1,0 +1,284 @@
+options
+{
+  STATIC = false;
+}
+
+PARSER_BEGIN(MyNewGrammar)
+/** Simple brace matcher. */
+package global.sesoc.boot.javaCC;
+import java.util.ArrayList;
+import global.sesoc.boot.service.URLGenerator;
+import global.sesoc.boot.Exception.TempoUnderflowException;
+import global.sesoc.boot.Exception.TempoOverflowException;
+import global.sesoc.boot.Exception.SoundFileNotFoundException;
+import java.io.IOException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
+public class MyNewGrammar
+{
+  private int btLocation = 0;
+
+  private String result = "";
+
+  private String url = "";
+
+  private int tempo = 16;
+
+  private double bpm;
+  URLGenerator generator;
+  int location = 0;
+  int loop = 1;
+  Token loc = new Token();
+  Token lop = new Token();
+  Token note = new Token();
+  Token number = new Token();
+  Token reverbEffect = new Token();
+  ArrayList < Integer > list = new ArrayList < Integer > ();
+  ArrayList < String > noteList = new ArrayList < String > ();
+  String reverb = "";
+  String delay = "";
+  String low = "";
+  String high = "";
+
+  public String getResult()
+  {
+    try
+    {
+      while (readLine())
+      {
+      }
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      return e.getMessage();
+    }
+    catch (Error e)
+    {
+      e.printStackTrace();
+      return e.getMessage();
+    }
+    return result;
+  }
+
+  public void setURLGenerator(URLGenerator generator)
+  {
+    this.generator = generator;
+  }
+
+  public double getLoc(double loc, double dloc)
+  {
+    double where = loc * bpm;
+    double fwhere = where + (bpm / tempo * dloc);
+    return fwhere;
+  }
+
+  public void setBPM(String key) throws UnsupportedAudioFileException, IOException, SoundFileNotFoundException
+  {
+    bpm = generator.getBPM(key);
+  }
+}
+
+PARSER_END(MyNewGrammar)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\r"
+| "\n"
+}
+
+TOKEN :
+{
+  < MELODY : "melody" >
+| < BEAT : "beat" >
+| < BASS : "bass" >
+}
+
+TOKEN :
+{
+  < PIANO : "piano" >
+| < DRUM : "drum" >
+| < GUITARNOTE : "guitarcode" >
+| < GUITARCODE : "guitarnote" >
+}
+
+TOKEN :
+{
+  < REVERB : "reverb" >
+| < DELAY : "delay" >
+| < LOWFILTER : "low" >
+| < HIGHFILTER : "high" >
+}
+
+TOKEN :
+{
+  < TEMPO : "tempo" >
+| < DO : "do" >
+| < LOCATION : "location" >
+| < NUMBER : (< DIGIT >)+ >
+| < DIGIT : [ "0"-"9" ] >
+| < INS : "ins" >
+| < SETNOTE : "note" >
+| < NOTE : ([ "A"-"Z", "a"-"z" ])+ ("#")* (< NUMBER >)* ("m")* >
+}
+
+boolean readLine() throws TempoOverflowException, TempoUnderflowException, UnsupportedAudioFileException, IOException, SoundFileNotFoundException, NumberFormatException :
+{
+  Token number, loops, ins, notes;
+}
+{
+  LOOKAHEAD(2)
+  < TEMPO > number = < NUMBER > ";"
+  {
+    tempo = Integer.parseInt(number.image);
+    if (tempo <= 0)
+    {
+      throw new TempoUnderflowException();
+    }
+    return true;
+  }
+| LOOKAHEAD(2)
+  ins = < INS > notes = < PIANO >
+  {
+    url = notes.image;
+    return true;
+  }
+| LOOKAHEAD(2)
+  ins = < INS > notes = < DRUM >
+  {
+    url = notes.image;
+    return true;
+  }
+| LOOKAHEAD(2)
+  ins = < INS > notes = < GUITARNOTE >
+  {
+    url = notes.image;
+    return true;
+  }
+| LOOKAHEAD(2)
+  ins = < INS > notes = < GUITARCODE >
+  {
+    url = notes.image;
+    return true;
+  }
+| LOOKAHEAD(2)
+  loops = < MELODY > number = < NUMBER >
+  {
+    url = loops.image + number.image;
+    setBPM(url);
+    return true;
+  }
+| LOOKAHEAD(2)
+  loops = < BEAT > number = < NUMBER >
+  {
+    url = loops.image + number.image;
+    setBPM(url);
+    return true;
+  }
+| LOOKAHEAD(2)
+  loops = < BASS > number = < NUMBER >
+  {
+    url = loops.image + number.image;
+    setBPM(url);
+    return true;
+  }
+| "{"
+  {
+    location = 0;
+    loop = 1;
+    loc = new Token();
+    lop = new Token();
+    reverbEffect = new Token();
+    note = new Token();
+    number = new Token();
+    list = new ArrayList < Integer > ();
+    noteList = new ArrayList < String > ();
+    reverb = "null";
+    delay = "null";
+    low = "null";
+    high = "null";
+    while (makeSound())
+    {}
+  }
+  "}"
+  {
+    for (int i = 0; i < loop; i++)
+    {
+      if (list.size() > 0)
+      {
+        for (int j = 0; j < list.size(); j++)
+        {
+          result += String.format("loadAudio('%s', %f,%s,%s,%s,%s); \n", generator.getFilePath(url + noteList.get(j)), getLoc(location + i, list.get(j)), reverb, delay, low, high);
+        }
+      }
+      else
+      {
+        result += String.format("loadAudio('%s', %lf); \n", generator.getFilePath(url), getLoc(btLocation, 0));
+        btLocation++;
+      }
+    }
+    return true;
+  }
+| < EOF >
+  {
+    return false;
+  }
+}
+
+boolean makeSound() throws TempoOverflowException, SoundFileNotFoundException, NumberFormatException :
+{
+}
+{
+  < DO > lop = < NUMBER > ";"
+  {
+    loop = Integer.parseInt(lop.image);
+    return true;
+  }
+| 
+  < LOCATION > loc = < NUMBER > ";"
+  {
+    location = Integer.parseInt(loc.image);
+    return true;
+  }
+| 
+  < REVERB > reverbEffect = < NOTE > ";"
+  {
+    reverb = reverbEffect.image;
+    return true;
+  }
+| 
+  < DELAY > number = < NUMBER > ";"
+  {
+    delay = number.image;
+    return true;
+  }
+| 
+  (< LOWFILTER >) number = < NUMBER > ";"
+  {
+    low = number.image;
+    return true;
+  }
+| 
+  (< HIGHFILTER >) number = < NUMBER > ";"
+  {
+    high = number.image;
+    return true;
+  }
+| 
+  < SETNOTE > "(" note = < NOTE > "," number = < NUMBER > ");"
+  {
+    if (tempo < Integer.parseInt(number.image))
+    {
+      throw new TempoOverflowException();
+    }
+    list.add(Integer.parseInt(number.image));
+    noteList.add(note.image);
+    return true;
+  }
+|
+  {
+    return false;
+  }
+}
