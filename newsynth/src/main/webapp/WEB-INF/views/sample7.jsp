@@ -169,7 +169,7 @@
 
 		var status = $(this).attr("src");
 		if (status == "images/button_off.png") {
-			var insData = theOne.attr("dt-ins");
+			var insData = theOne.attr("dt-ins"); 
 			var ntData = theOne.attr("dt-nt");
 			var locData = theOne.attr("dt-loc");
 			theOne.attr("src", "images/button_on.png");
