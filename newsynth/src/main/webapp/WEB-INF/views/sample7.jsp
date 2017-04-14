@@ -168,7 +168,7 @@
 
 	function btnEvent() {
 		var theOne = $(this);
-
+//dd
 		var status = $(this).attr("src");
 		if (status == "images/button_off.png") {
 			var insData = theOne.attr("dt-ins"); 
