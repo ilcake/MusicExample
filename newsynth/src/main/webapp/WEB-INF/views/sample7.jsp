@@ -8,6 +8,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.0/Pizzicato.js"></script>
 <script src="resources/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
+	//the Merge
 	var what;
 	var fullPadSize = 120;
 
