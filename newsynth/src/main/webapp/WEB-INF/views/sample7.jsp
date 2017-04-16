@@ -7,8 +7,17 @@
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.0/Pizzicato.js"></script>
 <script src="resources/jquery-3.1.1.min.js"></script>
+<script src="resources/audiojs/three.min.js"></script>
+<script src="resources/audiojs/ATUtil.js"></script>
+<script src="resources/audiojs/Stats.js"></script>
+<script src="resources/audiojs/RequestAnimationFrame.js"></script>
+<script src="resources/audiojs/jquery.mousewheel.js"></script>
+<script src="resources/audiojs/ImprovedNoise.js"></script>
+<script src="resources/audiojs/Visualizer.js"></script>
+<script src="resources/audiojs/main.js"></script>
 <script type="text/javascript">
-	var what;
+
+	var theMusic = "";
 	var fullPadSize = 120;
 
 	var thePicked = [];
@@ -214,7 +223,7 @@
 		mkCode();
 		goLed();
 		goPlay();
-		//interPlay = setInterval(goPlay, theTimes);
+		interPlay = setInterval(eval(theMusic), theTimes);
 		interLed = setInterval(goLed, theTimes);
 	}
 
@@ -341,7 +350,7 @@
 		var ins = muArray.ins;
 		var theCode = "";
 		if (beat != "") {
-			theCode += "beat " + beat + "{\n do 1 \n}"
+			theCode += "beat " + beat + "{\n location 1;\n do 1; \n}"
 			theCode += "\n";
 		}
 		var temp;
@@ -416,18 +425,23 @@
 	function goPlay() {
 		var beat = muArray.beat;
 		var notes = muArray.notes;
+		var theMusic = "";
 		mkCode();
 		var theCodeResult = $("#styled").text();
 		console.log("Here We Go : " + theCodeResult);
 		$.ajax({
 			url : "compile",
-			data : theCodeResult,
-			type : "POST",
+			data : {
+				"source" : theCodeResult
+			},
+			type : "post",
 			success : function(resp) {
 				console.log("success   //" + resp);
+				theMusic = resp;
+				eval(theMusic);
 			},
-			error : function(resp) {
-				console.log("err    //" + resp);
+			error : function(request, status, error) {
+				alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 			}
 		});
 	/* if (beat != "") {

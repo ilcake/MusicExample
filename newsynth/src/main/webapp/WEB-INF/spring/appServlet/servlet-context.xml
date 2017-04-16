@@ -24,9 +24,9 @@
 	<resources mapping="/styles/**" location="/styles/" />
 	<resources mapping="/ins/**" location="/ins/" />
 	<resources mapping="/pi/**" location="/ins/piano/" />
-	<resources mapping="/notes/**" location="/musicSources/notes/" />
+	<resources mapping="/notes/**" location="/resources/musicSources/notes/" />
 	<resources mapping="/bass/**" location="/musicSources/loops/bass/" />
-	<resources mapping="/beat/**" location="/musicSources/loops/beat/" />
+	<resources mapping="/loops/**" location="/musicSources/loops/" />
 	<resources mapping="/melody/**" location="/musicSources/loops/melody/" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 

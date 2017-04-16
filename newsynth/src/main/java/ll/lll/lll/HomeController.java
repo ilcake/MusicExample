@@ -22,6 +22,9 @@ import ll.lll.lll.jv.*;
 @Controller
 public class HomeController {
 
+	@Autowired
+	URLGenerator generator;
+
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	/**
@@ -87,12 +90,16 @@ public class HomeController {
 		return "sample8";
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/compile", method = RequestMethod.GET)
-	public String compile(String source) {
+	@RequestMapping(value = "/compile", method = RequestMethod.POST)
+	public @ResponseBody String compile(String source) {
 		System.out.println(source);
-
-		return "sample8";
+		source = "ins piano{ location 1; do 3; note(G1, 1); }";
+		System.out.println(source);
+		MyNewGrammar grammar = new MyNewGrammar(new ByteArrayInputStream(source.getBytes(StandardCharsets.UTF_8)));
+		grammar.setURLGenerator(generator);
+		String result = grammar.getResult();
+		System.out.println(result);
+		return result;
 	}
 
 }

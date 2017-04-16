@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import ll.lll.lll.Exception.SoundFileNotFoundException;
 import ll.lll.lll.vo.MusicSource;
 
-
 @Service
 public class URLGenerator {
 
@@ -40,6 +39,7 @@ public class URLGenerator {
 				if (file.isFile()) {
 					String fileName = deleteExtension(file.getName());
 					map.put((dirName + fileName).toLowerCase(), new MusicSource(file));
+					System.out.println("put File Key == " + dirName + fileName);
 				} else if (file.isDirectory()) {
 					dirName = file.getName();
 					subDirList(file.getCanonicalPath().toString());
@@ -65,6 +65,7 @@ public class URLGenerator {
 
 	public String getFilePath(String key) throws SoundFileNotFoundException {
 		MusicSource musicSource = map.get(key);
+		System.out.println("get File Path == " + key);
 		if (musicSource == null) {
 			throw new SoundFileNotFoundException();
 		}

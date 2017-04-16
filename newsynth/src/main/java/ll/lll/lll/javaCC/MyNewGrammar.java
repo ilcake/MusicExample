@@ -167,7 +167,7 @@ public class MyNewGrammar implements MyNewGrammarConstants {
 									reverb, delay, low, high);
 						}
 					} else {
-						result += String.format("loadAudio('%s', %lf); \u005cn", generator.getFilePath(url),
+						result += String.format("loadAudio('%s', %f); \u005cn", generator.getFilePath(url),
 								getLoc(btLocation, 0));
 						btLocation++;
 					}
